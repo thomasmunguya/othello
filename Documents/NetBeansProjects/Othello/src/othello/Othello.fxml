@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<FlowPane prefHeight="605.0" prefWidth="1067.0" style="-fx-background-color: DCDCDC;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="1067.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="640.0" minWidth="10.0" prefWidth="617.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="10.0" prefWidth="450.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="218.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="624.0" minHeight="10.0" prefHeight="612.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <BorderPane prefHeight="564.0" prefWidth="640.0" GridPane.rowIndex="1">
+               <top>
+                  <FlowPane fx:id="topBoardLabels" alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="1">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </Label>
+                        <Label text="2">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="3">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="4">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="5">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="6">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="7">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="8">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="65.0" right="65.0" />
+                     </padding>
+                  </FlowPane>
+               </top>
+               <right>
+                  <FlowPane alignment="TOP_CENTER" orientation="VERTICAL" prefHeight="564.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="CENTER">
+                     <padding>
+                        <Insets top="25.0" />
+                     </padding>
+                     <children>
+                        <Label text="A">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="B">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="C">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="D">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="E">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="F">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="G">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="H">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </FlowPane>
+               </right>
+               <center>
+                  <GridPane prefHeight="460.0" prefWidth="483.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="60.0" GridPane.columnIndex="1" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="1" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Rectangle arcHeight="5.0" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="2" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="3" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Rectangle arcWidth="5.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="4" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="5" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="6" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="6" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.rowIndex="7" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="7" GridPane.rowIndex="7" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="6" GridPane.rowIndex="7" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="5" GridPane.rowIndex="7" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                        <Rectangle height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <Rectangle fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="60.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                     </children>
+                  </GridPane>
+               </center>
+               <bottom>
+                  <FlowPane alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+                     <padding>
+                        <Insets left="92.0" right="65.0" />
+                     </padding>
+                     <children>
+                        <Label text="1">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="2">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="3">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="4">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="5">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="6">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="7">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="8">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </FlowPane>
+               </bottom>
+               <left>
+                  <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="640.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="TOP_LEFT">
+                     <padding>
+                        <Insets top="25.0" />
+                     </padding>
+                     <children>
+                        <Label text="A">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="B">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="C">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="D">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="E">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="F">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="G">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="H">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </FlowPane>
+               </left>
+            </BorderPane>
+            <FlowPane prefHeight="621.0" prefWidth="438.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <FlowPane alignment="CENTER_LEFT" prefHeight="199.0" prefWidth="451.0">
+                     <children>
+                        <BorderPane prefHeight="145.0" prefWidth="157.0">
+                           <top>
+                              <ImageView fx:id="arrowUpImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/uparrow.png" />
+                                 </image>
+                              </ImageView>
+                           </top>
+                           <left>
+                              <ImageView fx:id="arrowLeftImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/leftarrow.png" />
+                                 </image>
+                              </ImageView>
+                           </left>
+                           <right>
+                              <ImageView fx:id="arrowRightImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/rightarrow.png" />
+                                 </image>
+                              </ImageView>
+                           </right>
+                           <bottom>
+                              <ImageView fx:id="arrowDownImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/downarrow.png" />
+                                 </image>
+                              </ImageView>
+                           </bottom>
+                           <center>
+                              <Button fx:id="moveButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="43.0" text="Move" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Button>
+                           </center>
+                        </BorderPane>
+                        <BorderPane prefHeight="145.0" prefWidth="146.0">
+                           <top>
+                              <Label text="Player 1 Pieces:" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </top>
+                           <bottom>
+                              <Label text="Player 2 Pieces:" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </bottom>
+                           <padding>
+                              <Insets bottom="25.0" top="25.0" />
+                           </padding>
+                        </BorderPane>
+                        <GridPane alignment="CENTER" prefHeight="145.0" prefWidth="144.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0" prefWidth="45.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="0.0" prefWidth="99.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="75.0" minHeight="0.0" prefHeight="67.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="81.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ImageView fx:id="player1PieceImageView" fitHeight="36.0" fitWidth="36.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/black.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="player2PieceImageView" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                                 <image>
+                                    <Image url="@../../../../../OneDrive/project%20files/upwork/arzaan/project%201/A1-1_graphics/white.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="player1ScoreLabel" prefWidth="30.0" text="24" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="player2ScoreLabel" text="24" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </FlowPane>
+                  <TextArea prefHeight="430.0" prefWidth="450.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </TextArea>
+               </children>
+            </FlowPane>
+            <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="138.0" text="Show Valid Moves" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+      <TextField prefHeight="23.0" prefWidth="975.0">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </TextField>
+      <Button mnemonicParsing="false" prefHeight="22.0" prefWidth="88.0" style="-fx-background-color: black;" text="Submit" textFill="RED" />
+   </children>
+</FlowPane>
