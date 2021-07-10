@@ -36,9 +36,6 @@
                            <font>
                               <Font size="20.0" />
                            </font>
-                           <padding>
-                              <Insets left="30.0" />
-                           </padding>
                         </Label>
                         <Label text="2">
                            <font>
@@ -77,7 +74,7 @@
                         </Label>
                      </children>
                      <padding>
-                        <Insets left="65.0" right="65.0" />
+                        <Insets left="92.0" right="65.0" />
                      </padding>
                   </FlowPane>
                </top>
@@ -321,9 +318,9 @@
             </BorderPane>
             <FlowPane prefHeight="621.0" prefWidth="438.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <FlowPane alignment="CENTER_LEFT" prefHeight="199.0" prefWidth="451.0">
+                  <FlowPane fx:id="gameDetailsFlowPane" alignment="CENTER_LEFT" prefHeight="199.0" prefWidth="451.0">
                      <children>
-                        <BorderPane prefHeight="145.0" prefWidth="157.0">
+                        <BorderPane fx:id="controlsBorderPane" prefHeight="145.0" prefWidth="157.0">
                            <top>
                               <ImageView fx:id="arrowUpImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                                  <image>
@@ -413,7 +410,7 @@
                         </GridPane>
                      </children>
                   </FlowPane>
-                  <TextArea prefHeight="430.0" prefWidth="450.0">
+                  <TextArea fx:id="gameLogAndDetailsFlowPane" prefHeight="430.0" prefWidth="450.0">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>

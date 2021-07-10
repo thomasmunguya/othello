@@ -20,11 +20,11 @@ public class Othello extends Application {
         
         
         OthelloViewController othelloViewController = new OthelloViewController();
-        Scene scene = new Scene(othelloViewController, 1067, 695);
+        Scene scene = new Scene(othelloViewController, 1067, 670);
         
         primaryStage.setTitle("Arzaan's Othello Client");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
 

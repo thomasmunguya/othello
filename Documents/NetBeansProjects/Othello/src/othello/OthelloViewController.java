@@ -6,19 +6,80 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 public class OthelloViewController extends FlowPane {
     
     public OthelloViewController() {
-        this.setPrefHeight(605.0);
+        
+        TextField submissionTextField = new TextField();
+        submissionTextField.setPrefHeight(23.0);
+        submissionTextField.setPrefWidth(975.0);
+        submissionTextField.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+        
+        
+        Button submitButton = new Button("Submit");
+        submitButton.setTextFill(Paint.valueOf("RED"));
+        submitButton.setStyle("-fx-background-color: black;");
+        submitButton.setPrefSize(88.0, 22.0);
+        
+        this.setPrefHeight(670.0);
         this.setPrefWidth(1067.0);
+        this.setPrefWrapLength(400);
         this.setStyle("-fx-background-color: DCDCDC;");
-        setUpMainGridPane();
+        this.setOrientation(Orientation.VERTICAL);
+        this.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 5.0, 5.0, 0))));
+        this.getChildren().addAll(setUpMainGridPane(), setUpGameDetailsFlowPane(), submissionTextField );
+        
+        
     }
     
-    private void setUpMainGridPane() {
+    private GridPane setUpMainGridPane() {
+        
+        BorderPane boardAreaBorderPane = new BorderPane();
+        boardAreaBorderPane.setPrefHeight(564.0);
+        boardAreaBorderPane.setPrefWidth(640);
+        
+        List<FlowPane> boardLabelsFlowPanes = setUpBoardLabels();
+        boardAreaBorderPane.setTop(boardLabelsFlowPanes.get(0));
+        boardAreaBorderPane.setBottom(boardLabelsFlowPanes.get(1));
+        boardAreaBorderPane.setLeft(boardLabelsFlowPanes.get(2));
+        boardAreaBorderPane.setRight(boardLabelsFlowPanes.get(3));
+        
+        CheckBox showValidMovesCheckBox = new CheckBox("Show Valid Moves");
+        
+        ColumnConstraints columnConstraints1 = new ColumnConstraints();
+        columnConstraints1.setHgrow(Priority.SOMETIMES);
+        columnConstraints1.setMaxWidth(640.0);
+        columnConstraints1.setMinWidth(10.0);
+        columnConstraints1.setPrefWidth(617.0);
+        
+        ColumnConstraints columnConstraints2 = new ColumnConstraints();
+        columnConstraints2.setHgrow(Priority.SOMETIMES);
+        columnConstraints2.setMaxWidth(525.0);
+        columnConstraints2.setMinWidth(10.0);
+        columnConstraints2.setPrefWidth(450.0);
+        
+        RowConstraints rowConstraints1 = new RowConstraints();
+        rowConstraints1.setMaxHeight(218.0);
+        rowConstraints1.setMinHeight(0.0);
+        rowConstraints1.setPrefHeight(23.0);
+        rowConstraints1.setVgrow(Priority.SOMETIMES);
+        
+        RowConstraints rowConstraints2 = new RowConstraints();
+        rowConstraints2.setMaxHeight(624.0);
+        rowConstraints2.setMinHeight(10.0);
+        rowConstraints2.setPrefHeight(612.0);
+        rowConstraints2.setVgrow(Priority.SOMETIMES);
         
         GridPane mainGridPane = new GridPane();
         mainGridPane.setMaxHeight(Double.NEGATIVE_INFINITY);
@@ -27,22 +88,16 @@ public class OthelloViewController extends FlowPane {
         mainGridPane.setMinWidth(Double.NEGATIVE_INFINITY);
         mainGridPane.setPrefHeight(670.0);
         mainGridPane.setPrefWidth(1067.0);
-        
-        BorderPane boardAreaBorderPane = new BorderPane();
-        boardAreaBorderPane.setPrefHeight(564.0);
-        boardAreaBorderPane.setPrefWidth(640);
+        mainGridPane.getColumnConstraints().addAll(columnConstraints1, columnConstraints2);
+        mainGridPane.setAlignment(Pos.CENTER);
+        mainGridPane.getRowConstraints().addAll(rowConstraints1, rowConstraints2);
         mainGridPane.add(boardAreaBorderPane, 0, 1);
+        mainGridPane.add(setUpGameLogAndDetailsFlowPane(), 1, 1);
+        mainGridPane.add(showValidMovesCheckBox, 1, 0);
+        mainGridPane.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5, 5, 5, 5))));
         
-        List<FlowPane> boardLabelsFlowPanes = setUpBoardLabels();
-        boardAreaBorderPane.setTop(boardLabelsFlowPanes.get(0));
-        boardAreaBorderPane.setBottom(boardLabelsFlowPanes.get(1));
-        boardAreaBorderPane.setLeft(boardLabelsFlowPanes.get(2));
-        boardAreaBorderPane.setRight(boardLabelsFlowPanes.get(3));
-        System.out.println(boardLabelsFlowPanes.get(4));
-        
-        this.getChildren().add(mainGridPane);
-        
-//        return mainGridPane;
+        return mainGridPane;
         
     }
     
@@ -79,6 +134,7 @@ public class OthelloViewController extends FlowPane {
         topBoardLabelsFlowPane.setHgap(49.0);
         topBoardLabelsFlowPane.setPrefHeight(70.0);
         topBoardLabelsFlowPane.setPrefWidth(640.0);
+        topBoardLabelsFlowPane.setPadding(new Insets(0, 65.0, 0, 92.0));
         topBoardLabelsFlowPane.getChildren().addAll(top1Label, top2Label, top3Label,
                 top4Label, top5Label, top6Label, top7Label, top8Label);
         
@@ -113,6 +169,7 @@ public class OthelloViewController extends FlowPane {
         bottomBoardLabelsFlowPane.setHgap(49.0);
         bottomBoardLabelsFlowPane.setPrefHeight(70.0);
         bottomBoardLabelsFlowPane.setPrefWidth(640.0);
+        bottomBoardLabelsFlowPane.setPadding(new Insets(0, 65.0, 0, 92.0));
         bottomBoardLabelsFlowPane.getChildren().addAll(bottom1Label, bottom2Label, bottom3Label,
                 bottom4Label, bottom5Label, bottom6Label, bottom7Label, bottom8Label);
         
@@ -197,6 +254,167 @@ public class OthelloViewController extends FlowPane {
         boardLabelsFlowPanes.add(rightBoardLabelsFlowPane);
         
         return boardLabelsFlowPanes;
+    }
+    
+    private BorderPane setUpGameControlsBorderPane() {
+        
+        ImageView upArrowImageView = new ImageView("images/uparrow.png");
+        upArrowImageView.setFitHeight(40.0);
+        upArrowImageView.setFitWidth(40.0);
+        upArrowImageView.setPickOnBounds(true);
+        upArrowImageView.setPreserveRatio(true);
+        
+        Button upButton = new Button();
+        upButton.setPrefSize(40.0, 40.0);
+        upButton.setGraphic(upArrowImageView);
+        
+        ImageView downArrowImageView = new ImageView("images/downarrow.png");
+        downArrowImageView.setFitHeight(40.0);
+        downArrowImageView.setFitWidth(40.0);
+        downArrowImageView.setPickOnBounds(true);
+        downArrowImageView.setPreserveRatio(true);
+        
+        Button downButton = new Button();
+        downButton.setPrefSize(40, 40);
+        downButton.setGraphic(downArrowImageView);
+        
+        ImageView leftArrowImageView = new ImageView("images/leftarrow.png");
+        leftArrowImageView.setFitHeight(40.0);
+        leftArrowImageView.setFitWidth(40.0);
+        leftArrowImageView.setPickOnBounds(true);
+        leftArrowImageView.setPreserveRatio(true);
+        
+        Button leftButton = new Button();
+        leftButton.setPrefSize(40, 40);
+        leftButton.setGraphic(leftArrowImageView);
+        
+        ImageView rightArrowImageView = new ImageView("images/rightarrow.png");
+        rightArrowImageView.setFitHeight(40.0);
+        rightArrowImageView.setFitWidth(40.0);
+        rightArrowImageView.setPickOnBounds(true);
+        rightArrowImageView.setPreserveRatio(true);
+        
+        Button rightButton = new Button();
+        rightButton.setPrefSize(40, 40);
+        rightButton.setGraphic(rightArrowImageView);
+        
+        Button moveButton = new Button("Move");
+        moveButton.setFont(new Font(10));
+        moveButton.setPrefSize(40.0, 40.0);
+        
+        BorderPane gameControlsBorderPane = new BorderPane();
+        gameControlsBorderPane.setPrefHeight(145.0);
+        gameControlsBorderPane.setPrefWidth(157.0);
+        gameControlsBorderPane.setTop(upButton);
+        gameControlsBorderPane.setBottom(downButton);
+        gameControlsBorderPane.setCenter(moveButton);
+        gameControlsBorderPane.setLeft(leftButton);
+        gameControlsBorderPane.setRight(rightButton);
+        BorderPane.setAlignment(upButton, Pos.CENTER);
+        BorderPane.setAlignment(downButton, Pos.CENTER);
+        BorderPane.setAlignment(leftButton, Pos.CENTER);
+        BorderPane.setAlignment(rightButton, Pos.CENTER);
+ 
+        return gameControlsBorderPane;
+    }
+    
+    private FlowPane setUpGameDetailsFlowPane() {
+        
+        Label player1Label = new Label("Player 1 Pieces:");
+        player1Label.setFont(new Font(15));
+        
+        Label player2Label = new Label("Player 2 Pieces:");
+        player2Label.setFont(new Font(15));
+        
+        BorderPane playerLabelsBorderPane = new BorderPane();
+        playerLabelsBorderPane.setTop(player1Label);
+        playerLabelsBorderPane.setBottom(player2Label);
+        playerLabelsBorderPane.setPrefHeight(146);
+        playerLabelsBorderPane.setPrefWidth(145);
+        BorderPane.setAlignment(player1Label, Pos.CENTER);
+        BorderPane.setAlignment(player2Label, Pos.CENTER);
+        playerLabelsBorderPane.setPadding(new Insets(25.0, 0.0, 25.0, 0.0));
+        
+        ImageView player1IconImageView = new ImageView("images/black.png");
+        player1IconImageView.setFitHeight(36);
+        player1IconImageView.setFitWidth(36);
+        
+        ImageView player2IconImageView = new ImageView("images/white.png");
+        player2IconImageView.setFitHeight(36);
+        player2IconImageView.setFitWidth(36);
+        
+        Label player1ScoreLabel = new Label("24");
+        player1ScoreLabel.setFont(new Font(15));
+        
+        Label player2ScoreLabel = new Label("24");
+        player2ScoreLabel.setFont(new Font(15));
+        
+        ColumnConstraints columnConstraints1 = new ColumnConstraints();
+        columnConstraints1.setHgrow(Priority.SOMETIMES);
+        columnConstraints1.setMaxWidth(142.0);
+        columnConstraints1.setMinWidth(10.0);
+        columnConstraints1.setPrefWidth(45.0);
+        
+        ColumnConstraints columnConstraints2 = new ColumnConstraints();
+        columnConstraints2.setHgrow(Priority.SOMETIMES);
+        columnConstraints2.setMaxWidth(101.0);
+        columnConstraints2.setMinWidth(0.0);
+        columnConstraints2.setPrefWidth(99.0);
+        
+        RowConstraints rowConstraints1 = new RowConstraints();
+        rowConstraints1.setMaxHeight(75.0);
+        rowConstraints1.setMinHeight(0.0);
+        rowConstraints1.setPrefHeight(67.0);
+        rowConstraints1.setVgrow(Priority.SOMETIMES);
+        
+        RowConstraints rowConstraints2 = new RowConstraints();
+        rowConstraints2.setMaxHeight(81.0);
+        rowConstraints2.setMinHeight(10.0);
+        rowConstraints2.setPrefHeight(63.0);
+        rowConstraints2.setVgrow(Priority.SOMETIMES);
+        
+        GridPane playerIconAndScoreGridPane = new GridPane();
+        playerIconAndScoreGridPane.setMaxHeight(Double.NEGATIVE_INFINITY);
+        playerIconAndScoreGridPane.setMaxWidth(Double.NEGATIVE_INFINITY);
+        playerIconAndScoreGridPane.setMinHeight(Double.NEGATIVE_INFINITY);
+        playerIconAndScoreGridPane.setMinWidth(Double.NEGATIVE_INFINITY);
+        playerIconAndScoreGridPane.setPrefHeight(145.0);
+        playerIconAndScoreGridPane.setPrefWidth(144.0);
+        playerIconAndScoreGridPane.getColumnConstraints().addAll(columnConstraints1, columnConstraints2);
+        playerIconAndScoreGridPane.getRowConstraints().addAll(rowConstraints1, rowConstraints2);
+        
+        playerIconAndScoreGridPane.add(player1IconImageView, 0, 0);
+        playerIconAndScoreGridPane.add(player2IconImageView, 0, 1);
+        playerIconAndScoreGridPane.add(player1ScoreLabel, 1, 0);
+        playerIconAndScoreGridPane.add(player2ScoreLabel, 1, 1);
+        playerIconAndScoreGridPane.setAlignment(Pos.CENTER);
+        
+        FlowPane gameDetailsFlowPane = new FlowPane();
+        gameDetailsFlowPane.setPrefHeight(199);
+        gameDetailsFlowPane.setPrefWidth(451);
+        gameDetailsFlowPane.getChildren().addAll(setUpGameControlsBorderPane(), playerLabelsBorderPane, playerIconAndScoreGridPane);
+        
+        return gameDetailsFlowPane;
+    }
+    
+    private FlowPane setUpGameLogAndDetailsFlowPane() {
+        
+        TextArea gameLogTextArea = new TextArea();
+        gameLogTextArea.setPrefHeight(430.0);
+        gameLogTextArea.setPrefWidth(450.0);
+        gameLogTextArea.setPadding(new Insets(5.0, 5.0, 5.0, 0));
+        gameLogTextArea.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0, 5.0, 0))));
+        gameLogTextArea.setStyle("-fx-control-inner-background: rgb(175, 175, 255)");
+        
+        FlowPane gameLogAndDetailsFlowPane = new FlowPane();
+        gameLogAndDetailsFlowPane.setPrefHeight(621.0);
+        gameLogAndDetailsFlowPane.setPrefWidth(438.0);
+        gameLogAndDetailsFlowPane.getChildren().addAll(setUpGameDetailsFlowPane(), gameLogTextArea);
+        gameLogAndDetailsFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 0, 5.0))));
+        
+        return gameLogAndDetailsFlowPane;
     }
     
 }
