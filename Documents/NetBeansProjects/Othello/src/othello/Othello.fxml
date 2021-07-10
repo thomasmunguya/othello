@@ -16,7 +16,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <FlowPane prefHeight="605.0" prefWidth="1067.0" style="-fx-background-color: DCDCDC;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="1067.0">
@@ -31,7 +30,7 @@
          <children>
             <BorderPane prefHeight="564.0" prefWidth="640.0" GridPane.rowIndex="1">
                <top>
-                  <FlowPane fx:id="topBoardLabels" alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+                  <FlowPane fx:id="topBoardLabelsFlowPane" alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                      <children>
                         <Label text="1">
                            <font>
@@ -83,7 +82,7 @@
                   </FlowPane>
                </top>
                <right>
-                  <FlowPane alignment="TOP_CENTER" orientation="VERTICAL" prefHeight="564.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="CENTER">
+                  <FlowPane fx:id="rightBoardLabelsFlowPane" alignment="TOP_CENTER" orientation="VERTICAL" prefHeight="564.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="CENTER">
                      <padding>
                         <Insets top="25.0" />
                      </padding>
@@ -222,7 +221,7 @@
                   </GridPane>
                </center>
                <bottom>
-                  <FlowPane alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+                  <FlowPane fx:id="bottomBoardLabelsFlowPane" alignment="CENTER_LEFT" hgap="49.0" prefHeight="70.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                      <padding>
                         <Insets left="92.0" right="65.0" />
                      </padding>
@@ -271,7 +270,7 @@
                   </FlowPane>
                </bottom>
                <left>
-                  <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="640.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="TOP_LEFT">
+                  <FlowPane fx:id="leftBoardLabelsFlowPane" alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="640.0" prefWidth="70.0" vgap="30.0" BorderPane.alignment="TOP_LEFT">
                      <padding>
                         <Insets top="25.0" />
                      </padding>
