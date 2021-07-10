@@ -6,6 +6,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -20,25 +21,36 @@ public class OthelloViewController extends FlowPane {
     
     public OthelloViewController() {
         
-        TextField submissionTextField = new TextField();
-        submissionTextField.setPrefHeight(23.0);
-        submissionTextField.setPrefWidth(975.0);
-        submissionTextField.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+        TextField submitTextField = new TextField();
+        submitTextField.setPrefHeight(23.0);
+        submitTextField.setPrefWidth(975.0);
+        submitTextField.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
         
         
         Button submitButton = new Button("Submit");
         submitButton.setTextFill(Paint.valueOf("RED"));
         submitButton.setStyle("-fx-background-color: black;");
-        submitButton.setPrefSize(88.0, 22.0);
+        submitButton.setPrefSize(96.0, 23.0);
         
-        this.setPrefHeight(670.0);
-        this.setPrefWidth(1067.0);
-        this.setPrefWrapLength(400);
+        FlowPane flowPane = new FlowPane();
+        flowPane.setPrefHeight(23.0);
+        flowPane.setPrefWidth(975.0 + 96.0);
+        flowPane.setOrientation(Orientation.HORIZONTAL);
+        flowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0.0, 0.0, 0.0))));
+        flowPane.getChildren().addAll(submitTextField, submitButton);
+        
+        
+        this.setPrefHeight(700.0);
+        this.setPrefWidth(1075.0);
+//        this.setPrefWrapLength(400);
         this.setStyle("-fx-background-color: DCDCDC;");
-        this.setOrientation(Orientation.VERTICAL);
+        this.setOrientation(Orientation.HORIZONTAL);
+        this.setRowValignment(VPos.CENTER);
+        this.setAlignment(Pos.TOP_LEFT);
         this.setBorder(new Border(new BorderStroke(Color.GREY, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 5.0, 5.0, 0))));
-        this.getChildren().addAll(setUpMainGridPane(), setUpGameDetailsFlowPane(), submissionTextField );
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
+        this.getChildren().addAll(setUpMainGridPane(), flowPane);
         
         
     }
@@ -92,10 +104,10 @@ public class OthelloViewController extends FlowPane {
         mainGridPane.setAlignment(Pos.CENTER);
         mainGridPane.getRowConstraints().addAll(rowConstraints1, rowConstraints2);
         mainGridPane.add(boardAreaBorderPane, 0, 1);
-        mainGridPane.add(setUpGameLogAndDetailsFlowPane(), 1, 1);
+        mainGridPane.add(setUpGameChatAndDetailsFlowPane(), 1, 1);
         mainGridPane.add(showValidMovesCheckBox, 1, 0);
-        mainGridPane.setBorder(new Border(new BorderStroke(Color.GREY, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5, 5, 5, 5))));
+//        mainGridPane.setBorder(new Border(new BorderStroke(Color.GREY, 
+//            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5, 5, 5, 5))));
         
         return mainGridPane;
         
@@ -343,10 +355,10 @@ public class OthelloViewController extends FlowPane {
         player2IconImageView.setFitHeight(36);
         player2IconImageView.setFitWidth(36);
         
-        Label player1ScoreLabel = new Label("24");
+        Label player1ScoreLabel = new Label("240000");
         player1ScoreLabel.setFont(new Font(15));
         
-        Label player2ScoreLabel = new Label("24");
+        Label player2ScoreLabel = new Label("240000");
         player2ScoreLabel.setFont(new Font(15));
         
         ColumnConstraints columnConstraints1 = new ColumnConstraints();
@@ -392,29 +404,29 @@ public class OthelloViewController extends FlowPane {
         FlowPane gameDetailsFlowPane = new FlowPane();
         gameDetailsFlowPane.setPrefHeight(199);
         gameDetailsFlowPane.setPrefWidth(451);
+        gameDetailsFlowPane.setPadding(new Insets(20.0, 0.0, 0.0, 5.0));
         gameDetailsFlowPane.getChildren().addAll(setUpGameControlsBorderPane(), playerLabelsBorderPane, playerIconAndScoreGridPane);
         
         return gameDetailsFlowPane;
     }
     
-    private FlowPane setUpGameLogAndDetailsFlowPane() {
+    private FlowPane setUpGameChatAndDetailsFlowPane() {
         
-        TextArea gameLogTextArea = new TextArea();
-        gameLogTextArea.setPrefHeight(430.0);
-        gameLogTextArea.setPrefWidth(450.0);
-        gameLogTextArea.setPadding(new Insets(5.0, 5.0, 5.0, 0));
-        gameLogTextArea.setBorder(new Border(new BorderStroke(Color.GREY, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0, 5.0, 0))));
-        gameLogTextArea.setStyle("-fx-control-inner-background: rgb(175, 175, 255)");
+        TextArea gameChatTextArea = new TextArea();
+        gameChatTextArea.setPrefHeight(430.0);
+        gameChatTextArea.setPrefWidth(450.0);
+        gameChatTextArea.setBorder(new Border(new BorderStroke(Color.GREY, 
+        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0, 5.0, 0))));
+        gameChatTextArea.setStyle("-fx-control-inner-background: rgb(175, 175, 255)");
         
-        FlowPane gameLogAndDetailsFlowPane = new FlowPane();
-        gameLogAndDetailsFlowPane.setPrefHeight(621.0);
-        gameLogAndDetailsFlowPane.setPrefWidth(438.0);
-        gameLogAndDetailsFlowPane.getChildren().addAll(setUpGameDetailsFlowPane(), gameLogTextArea);
-        gameLogAndDetailsFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
-            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 0, 5.0))));
+        FlowPane gameChatAndDetailsFlowPane = new FlowPane();
+        gameChatAndDetailsFlowPane.setPrefHeight(621.0);
+        gameChatAndDetailsFlowPane.setPrefWidth(455.0);
+        gameChatAndDetailsFlowPane.getChildren().addAll(setUpGameDetailsFlowPane(), gameChatTextArea);
+        gameChatAndDetailsFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
+            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
         
-        return gameLogAndDetailsFlowPane;
+        return gameChatAndDetailsFlowPane;
     }
     
 }
