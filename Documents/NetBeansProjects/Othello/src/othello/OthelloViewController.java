@@ -33,6 +33,7 @@ public class OthelloViewController extends FlowPane {
     private CheckBox showValidMovesCheckBox;
     private Label player1ScoreLabel;
     private Label player2ScoreLabel;
+    GridPane boardGridPane;
     
     public OthelloViewController() {
         
@@ -127,7 +128,7 @@ public class OthelloViewController extends FlowPane {
     
     private GridPane setUpBoardGridPane() {
        
-        GridPane boardGridPane = new GridPane();
+        boardGridPane = new GridPane();
         boardGridPane.setPrefHeight(460.0); 
         boardGridPane.setPrefWidth(483.0);
         boardGridPane.setBorder(new Border(new BorderStroke(Color.GREY, 
@@ -141,16 +142,20 @@ public class OthelloViewController extends FlowPane {
         for(int i = 0; i < BOARD_SIZE; i++) {
             for(int j = 0; j < BOARD_SIZE; j++) {
                 
-                Rectangle boardSquare = new Rectangle();
-                boardSquare.setHeight(60.0);
-                boardSquare.setWidth(60.0);
+                BorderPane boardSquare = new BorderPane();
+                boardSquare.setPrefSize(60.0, 60.0);
                 
-                if((i % 2 == 0) == (j % 2 == 0))
-                    boardSquare.setFill(Color.WHITE);
-                else
-                    boardSquare.setFill(Color.BLACK);
                 
+                if((i % 2 == 0) == (j % 2 == 0)) {
+                    boardSquare.setStyle("-fx-background-color: WHITE;");
+                }
+                else {
+                    boardSquare.setStyle("-fx-background-color: BLACK;");
+                }
+                   
                 boardGridPane.add(boardSquare, i, j);
+                InitializeGame();
+//                BOARD[i][j] = boardSquare;
             }
         }
         return boardGridPane;
@@ -310,9 +315,12 @@ public class OthelloViewController extends FlowPane {
         
         return boardLabelsFlowPanes;
     }
-    
+    /**
+     * Sets up the border pane for the game control buttons
+     * @return 
+     */
     private BorderPane setUpGameControlsBorderPane() {
-        
+        //
         ImageView upArrowImageView = new ImageView("images/uparrow.png");
         upArrowImageView.setFitHeight(40.0);
         upArrowImageView.setFitWidth(40.0);
@@ -488,6 +496,27 @@ public class OthelloViewController extends FlowPane {
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
         
         return gameChatAndDetailsFlowPane;
+    }
+    
+    /**
+     * Initialises the game
+     */
+    private void InitializeGame() {
+        
+        //remove all the pieces from the board
+        boardGridPane.getChildren().forEach(square -> ((BorderPane)square).getChildren().clear());
+        
+        
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            for(int j = 0; j < BOARD_SIZE; j++) {
+                if((i == 4 - 1 && j == 4 - 1) | (i == 5 - 1 && j == 5 - 1) ) {
+                    boardGridPane.add(new BorderPane(new ImageView("images/white.png"), null, null, null, null), i, j);
+                }
+                if((i == 4 - 1 && j == 5 - 1) | (i == 5 - 1 && j == 4 - 1) ) {
+                    boardGridPane.add(new BorderPane(new ImageView("images/black.png"), null, null, null, null), i, j);
+                }
+            }
+        }
     }
     
 }
