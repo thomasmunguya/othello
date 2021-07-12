@@ -1,10 +1,5 @@
-
 package othello;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,15 +10,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * A class that models a splash screen
- * The splash screen stays on the screen for a maximum of ten seconds
+ * A class representing a splash screen
  */
 public class OthelloSplashScreen extends Stage {
+    /**
+     * The duration of the splash screen in milliseconds
+     */
     public static final int DURATION = 10000;
     
+    /**
+     * Instantiates an OthelloSplashScreen
+     */
     public OthelloSplashScreen() {
     }
     
+    /**
+     * Assembles the splash screen
+     */
     public void setUpSplashScreen() {
         
         ImageView splashScreenImageView = new ImageView("images/splashscreen.png");

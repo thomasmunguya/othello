@@ -1,6 +1,5 @@
 package othello;
 
-import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.*;
 import java.util.*;
 import javafx.geometry.HPos;
@@ -8,41 +7,50 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
+/**
+ * This class controls the UI 
+ */
 public class OthelloViewController extends FlowPane {
     
     private final int BOARD_SIZE = 8;
-    private final ImageView[][] BOARD = new ImageView[BOARD_SIZE][BOARD_SIZE];
+    private final BorderPane[][] BOARD = new BorderPane[BOARD_SIZE][BOARD_SIZE];
     private Button upButton;
     private Button downButton;
     private Button leftButton;
     private Button rightButton;
     private Button moveButton;
     private Button submitButton;
-    private TextField consoleTextField;
+    private TextField submitTextField;
     private TextArea gameChatTextArea;
     private CheckBox showValidMovesCheckBox;
     private Label player1ScoreLabel;
     private Label player2ScoreLabel;
-    GridPane boardGridPane;
+    private GridPane boardGridPane;
     
+    /**
+     * Instantiates an OthelloViewController
+     */
     public OthelloViewController() {
         
-        consoleTextField = new TextField();
-        consoleTextField.setPrefHeight(23.0);
-        consoleTextField.setPrefWidth(975.0);
-        consoleTextField.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+        submitTextField = new TextField();
+        submitTextField.setPrefHeight(23.0);
+        submitTextField.setPrefWidth(975.0);
+        submitTextField.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
         
         submitButton = new Button("Submit");
+        submitButton.setId("submitButton");
         submitButton.setTextFill(Paint.valueOf("RED"));
         submitButton.setStyle("-fx-background-color: black;");
         submitButton.setPrefSize(96.0, 23.0);
@@ -53,7 +61,7 @@ public class OthelloViewController extends FlowPane {
         consoleFlowPane.setOrientation(Orientation.HORIZONTAL);
         consoleFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0.0, 0.0, 0.0))));
-        consoleFlowPane.getChildren().addAll(consoleTextField, submitButton);
+        consoleFlowPane.getChildren().addAll(submitTextField, submitButton);
         
         
         this.setPrefHeight(700.0);
@@ -66,9 +74,15 @@ public class OthelloViewController extends FlowPane {
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
         this.getChildren().addAll(setUpMainGridPane(), consoleFlowPane);
         
+        new Controller(this);
+        
         
     }
     
+    /**
+     * Sets up the main grid pane
+     * @return the main grid pane
+     */
     private GridPane setUpMainGridPane() {
         
         BorderPane boardAreaBorderPane = new BorderPane();
@@ -83,6 +97,7 @@ public class OthelloViewController extends FlowPane {
         boardAreaBorderPane.setRight(boardLabelsFlowPanes.get(3));
         
         showValidMovesCheckBox = new CheckBox("Show Valid Moves");
+        showValidMovesCheckBox.setId("showValidMovesCheckbox");
         
         ColumnConstraints columnConstraints1 = new ColumnConstraints();
         columnConstraints1.setHgrow(Priority.SOMETIMES);
@@ -126,6 +141,10 @@ public class OthelloViewController extends FlowPane {
         
     }
     
+    /**
+     * Sets up the grid pane to contain the board squares
+     * @return  the GridPane containing the board squares
+     */
     private GridPane setUpBoardGridPane() {
        
         boardGridPane = new GridPane();
@@ -155,15 +174,20 @@ public class OthelloViewController extends FlowPane {
                    
                 boardGridPane.add(boardSquare, i, j);
                 InitializeGame();
-//                BOARD[i][j] = boardSquare;
+                BOARD[i][j] = boardSquare;
             }
         }
         return boardGridPane;
     }
     
+    /**
+     * Sets up the labels for the board
+     * This method assembles the labels around the board.
+     * @return the list of flow panes containing the top, right, bottom and left board labels
+     */
     private List<FlowPane> setUpBoardLabels() {
         
-        //Top board labels start here
+        //Create the top board labels
         Label top1Label = new Label("1");
         top1Label.setFont(new Font(20.0));
         
@@ -187,8 +211,8 @@ public class OthelloViewController extends FlowPane {
         
         Label top8Label = new Label("8");
         top8Label.setFont(new Font(20.0));
-        //Top board labels end here
         
+        //set up the flow pane to contain the top board labels
         FlowPane topBoardLabelsFlowPane = new FlowPane();
         topBoardLabelsFlowPane.setAlignment(Pos.CENTER_LEFT);
         topBoardLabelsFlowPane.setHgap(49.0);
@@ -198,7 +222,7 @@ public class OthelloViewController extends FlowPane {
         topBoardLabelsFlowPane.getChildren().addAll(top1Label, top2Label, top3Label,
                 top4Label, top5Label, top6Label, top7Label, top8Label);
         
-        //Bottom board labels start here
+        //Create bottom board labels
         Label bottom1Label = new Label("1");
         bottom1Label.setFont(new Font(20.0));
         
@@ -222,8 +246,8 @@ public class OthelloViewController extends FlowPane {
         
         Label bottom8Label = new Label("8");
         bottom8Label.setFont(new Font(20.0));
-        //bottom board labels end here
         
+        //set up the flow pane to contain the left board labels
         FlowPane bottomBoardLabelsFlowPane = new FlowPane();
         bottomBoardLabelsFlowPane.setAlignment(Pos.CENTER_LEFT);
         bottomBoardLabelsFlowPane.setHgap(49.0);
@@ -233,7 +257,7 @@ public class OthelloViewController extends FlowPane {
         bottomBoardLabelsFlowPane.getChildren().addAll(bottom1Label, bottom2Label, bottom3Label,
                 bottom4Label, bottom5Label, bottom6Label, bottom7Label, bottom8Label);
         
-        //Left board labels start here
+        //Create left board labels
         Label left1Label = new Label("A");
         left1Label.setFont(new Font(20.0));
         
@@ -257,8 +281,8 @@ public class OthelloViewController extends FlowPane {
         
         Label left8Label = new Label("H");
         left8Label.setFont(new Font(20.0));
-        //left board labels end here
         
+        //set up the flow pane to contain the left board labels
         FlowPane leftBoardLabelsFlowPane = new FlowPane();
         leftBoardLabelsFlowPane.setAlignment(Pos.TOP_CENTER);
         leftBoardLabelsFlowPane.setVgap(30.0);
@@ -270,7 +294,7 @@ public class OthelloViewController extends FlowPane {
         leftBoardLabelsFlowPane.getChildren().addAll(left1Label, left2Label, left3Label,
                 left4Label, left5Label, left6Label, left7Label, left8Label);
         
-        //Right board labels start here
+        //Create right board labels
         Label right1Label = new Label("A");
         right1Label.setFont(new Font(20.0));
         
@@ -294,8 +318,8 @@ public class OthelloViewController extends FlowPane {
         
         Label right8Label = new Label("H");
         right8Label.setFont(new Font(20.0));
-        //right board labels end here
         
+        //set up the flow pane to contain the right board labels
         FlowPane rightBoardLabelsFlowPane = new FlowPane();
         rightBoardLabelsFlowPane.setAlignment(Pos.TOP_CENTER);
         rightBoardLabelsFlowPane.setVgap(30.0);
@@ -307,6 +331,7 @@ public class OthelloViewController extends FlowPane {
         rightBoardLabelsFlowPane.getChildren().addAll(right1Label, right2Label, right3Label,
                 right4Label, right5Label, right6Label, right7Label, right8Label);
         
+        //put all the panes containing the board labels together
         List<FlowPane> boardLabelsFlowPanes = new ArrayList<>();
         boardLabelsFlowPanes.add(topBoardLabelsFlowPane);
         boardLabelsFlowPanes.add(bottomBoardLabelsFlowPane);
@@ -316,72 +341,62 @@ public class OthelloViewController extends FlowPane {
         return boardLabelsFlowPanes;
     }
     /**
-     * Sets up the border pane for the game control buttons
-     * @return 
+     * Sets up the border pane for the game control buttons (move button and directional buttons)
+     * @return the border pane containing the game controls
      */
     private BorderPane setUpGameControlsBorderPane() {
-        //
-        ImageView upArrowImageView = new ImageView("images/uparrow.png");
-        upArrowImageView.setFitHeight(40.0);
-        upArrowImageView.setFitWidth(40.0);
-        upArrowImageView.setPickOnBounds(true);
-        upArrowImageView.setPreserveRatio(true);
+        
+        //Assemble control buttons
+        Background upButtonBackground = new Background(new BackgroundImage(new Image("images/uparrow.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
         
         upButton = new Button();
+        upButton.setId("upButton");
         upButton.setPrefSize(40.0, 40.0);
-        upButton.setGraphic(upArrowImageView);
-        upButton.setStyle("-fx-background-color: WHITE;");
+        upButton.setBackground(upButtonBackground);
         upButton.setMaxSize(40.0, 40.0);
         upButton.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
         
-        ImageView downArrowImageView = new ImageView("images/downarrow.png");
-        downArrowImageView.setFitHeight(40.0);
-        downArrowImageView.setFitWidth(40.0);
-        downArrowImageView.setPickOnBounds(true);
-        downArrowImageView.setPreserveRatio(true);
+        Background downButtonBackground = new Background(new BackgroundImage(new Image("images/downarrow.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
         
         downButton = new Button();
+        downButton.setId("downButton");
         downButton.setPrefSize(40, 40);
-        downButton.setGraphic(downArrowImageView);
-        downButton.setStyle("-fx-background-color: WHITE;");
+        downButton.setBackground(downButtonBackground);
         downButton.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
         
-        ImageView leftArrowImageView = new ImageView("images/leftarrow.png");
-        leftArrowImageView.setFitHeight(40.0);
-        leftArrowImageView.setFitWidth(40.0);
-        leftArrowImageView.setPickOnBounds(true);
-        leftArrowImageView.setPreserveRatio(true);
+        Background leftButtonBackground = new Background(new BackgroundImage(new Image("images/leftarrow.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
         
         leftButton = new Button();
+        leftButton.setId("leftButton");
         leftButton.setPrefSize(40.0, 40.0);
-        leftButton.setGraphic(leftArrowImageView);
-        leftButton.setStyle("-fx-background-color: WHITE;");
+        leftButton.setBackground(leftButtonBackground);
         leftButton.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
         
-        ImageView rightArrowImageView = new ImageView("images/rightarrow.png");
-        rightArrowImageView.setFitHeight(40.0);
-        rightArrowImageView.setFitWidth(40.0);
-        rightArrowImageView.setPickOnBounds(true);
-        rightArrowImageView.setPreserveRatio(true);
+        Background rightButtonBackground = new Background(new BackgroundImage(new Image("images/rightarrow.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
         
         rightButton = new Button();
+        rightButton.setId("rightButton");
         rightButton.setPrefSize(40.0, 40.0);
-        rightButton.setGraphic(rightArrowImageView);
-        rightButton.setStyle("-fx-background-color: WHITE;");
+        rightButton.setBackground(rightButtonBackground);
         rightButton.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
         
         moveButton = new Button("Move");
+        moveButton.setId("moveButton");
         moveButton.setFont(new Font(10));
         moveButton.setPrefSize(40.0, 40.0);
         moveButton.setStyle("-fx-background-color: WHITE;");
         moveButton.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
-        System.out.println(leftButton.getPrefHeight());
         
+        //Assemble the border pane that holds the control buttons
         BorderPane gameControlsBorderPane = new BorderPane();
         gameControlsBorderPane.setPrefHeight(145.0);
         gameControlsBorderPane.setPrefWidth(157.0);
@@ -398,14 +413,19 @@ public class OthelloViewController extends FlowPane {
         return gameControlsBorderPane;
     }
     
+    /**
+     * Assembles the flow pane containing the game details
+     * @return the game details flow pane
+     */
     private FlowPane setUpGameDetailsFlowPane() {
-        
+        //set up the labels showing the player pieces
         Label player1Label = new Label("Player 1 Pieces:");
         player1Label.setFont(new Font(15.0));
         
         Label player2Label = new Label("Player 2 Pieces:");
         player2Label.setFont(new Font(15.0));
         
+        //Assemble a border pane and put the labels in a border pane
         BorderPane playerLabelsBorderPane = new BorderPane();
         playerLabelsBorderPane.setTop(player1Label);
         playerLabelsBorderPane.setBottom(player2Label);
@@ -415,6 +435,7 @@ public class OthelloViewController extends FlowPane {
         BorderPane.setAlignment(player2Label, Pos.CENTER);
         playerLabelsBorderPane.setPadding(new Insets(25.0, 0.0, 25.0, 0.0));
         
+        //set up the player icons
         ImageView player1IconImageView = new ImageView("images/black.png");
         player1IconImageView.setFitHeight(36);
         player1IconImageView.setFitWidth(36);
@@ -423,6 +444,7 @@ public class OthelloViewController extends FlowPane {
         player2IconImageView.setFitHeight(36);
         player2IconImageView.setFitWidth(36);
         
+        //set up the score labels
         player1ScoreLabel = new Label("240000");
         player1ScoreLabel.setFont(new Font(15.0));
         
@@ -430,13 +452,11 @@ public class OthelloViewController extends FlowPane {
         player2ScoreLabel.setFont(new Font(15.0));
         
         ColumnConstraints columnConstraints1 = new ColumnConstraints();
-        columnConstraints1.setHgrow(Priority.SOMETIMES);
         columnConstraints1.setMaxWidth(142.0);
         columnConstraints1.setMinWidth(10.0);
         columnConstraints1.setPrefWidth(45.0);
         
         ColumnConstraints columnConstraints2 = new ColumnConstraints();
-        columnConstraints2.setHgrow(Priority.SOMETIMES);
         columnConstraints2.setMaxWidth(101.0);
         columnConstraints2.setMinWidth(0.0);
         columnConstraints2.setPrefWidth(99.0);
@@ -445,19 +465,13 @@ public class OthelloViewController extends FlowPane {
         rowConstraints1.setMaxHeight(75.0);
         rowConstraints1.setMinHeight(0.0);
         rowConstraints1.setPrefHeight(67.0);
-        rowConstraints1.setVgrow(Priority.SOMETIMES);
         
         RowConstraints rowConstraints2 = new RowConstraints();
         rowConstraints2.setMaxHeight(81.0);
         rowConstraints2.setMinHeight(10.0);
         rowConstraints2.setPrefHeight(63.0);
-        rowConstraints2.setVgrow(Priority.SOMETIMES);
         
         GridPane playerIconAndScoreGridPane = new GridPane();
-        playerIconAndScoreGridPane.setMaxHeight(Double.NEGATIVE_INFINITY);
-        playerIconAndScoreGridPane.setMaxWidth(Double.NEGATIVE_INFINITY);
-        playerIconAndScoreGridPane.setMinHeight(Double.NEGATIVE_INFINITY);
-        playerIconAndScoreGridPane.setMinWidth(Double.NEGATIVE_INFINITY);
         playerIconAndScoreGridPane.setPrefHeight(145.0);
         playerIconAndScoreGridPane.setPrefWidth(144.0);
         playerIconAndScoreGridPane.getColumnConstraints().addAll(columnConstraints1, columnConstraints2);
@@ -478,6 +492,10 @@ public class OthelloViewController extends FlowPane {
         return gameDetailsFlowPane;
     }
     
+    /**
+     * Assembles the flow pane containing the game chat and game details
+     * @return the game chat and game details flow pane
+     */
     private FlowPane setUpGameChatAndDetailsFlowPane() {
         
         gameChatTextArea = new TextArea();
@@ -506,7 +524,7 @@ public class OthelloViewController extends FlowPane {
         //remove all the pieces from the board
         boardGridPane.getChildren().forEach(square -> ((BorderPane)square).getChildren().clear());
         
-        
+        //add pieces to the center of the board to initialize the game
         for(int i = 0; i < BOARD_SIZE; i++) {
             for(int j = 0; j < BOARD_SIZE; j++) {
                 if((i == 4 - 1 && j == 4 - 1) | (i == 5 - 1 && j == 5 - 1) ) {
@@ -516,6 +534,53 @@ public class OthelloViewController extends FlowPane {
                     boardGridPane.add(new BorderPane(new ImageView("images/black.png"), null, null, null, null), i, j);
                 }
             }
+        }
+    }
+    
+    /**
+     * An inner Controller class for controlling the UI
+     */
+    class Controller {
+        
+        OthelloViewController viewController;
+        
+        public Controller(OthelloViewController viewController) {
+            this.viewController = viewController;
+            logActionsPerformed();
+        }
+        
+        /**
+         * Logs information when a button is pressed or when the tick box is checked/ unchecked
+         */
+        public void logActionsPerformed() {
+            viewController.upButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
+            });
+            
+            viewController.downButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
+            });
+            
+            viewController.leftButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
+            });
+            
+            viewController.rightButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());
+            });
+            
+            viewController.showValidMovesCheckBox.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
+            });
+            
+            viewController.submitButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
+            });
+            
+            viewController.moveButton.setOnAction((e) -> {
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
+            });
+            
         }
     }
     
