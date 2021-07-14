@@ -679,6 +679,41 @@ public class OthelloViewController extends FlowPane {
         }      
          
     }
+    
+    /**
+     * Updates the state of the board
+     * @param newBoardState the new state of the board
+     */
+    public void updateBoardState(int[][] newBoardState) {
+        //clear the current board state
+        for(BorderPane[] squares: BOARD) {
+            for(BorderPane square: squares) {
+                square = null;
+            }
+        }
+        
+        //clear the grid pane holding the board squares
+        boardGridPane.getChildren().clear();
+        
+        //update the board state with the new state
+        for(int row = 0; row < BOARD_SIZE; row++) {
+            for(int col = 0; col < BOARD_SIZE; col++) {
+                if(newBoardState[row][col] == OthelloModel.PLAYER_1) {
+                    BOARD[row][col] = new BorderPane(new ImageView("images/black.png"), null, null, null, null); 
+                }
+                else if(newBoardState[row][col] == OthelloModel.PLAYER_2) {
+                    BOARD[row][col] = new BorderPane(new ImageView("images/white.png"), null, null, null, null);
+                }
+            }
+        }
+        
+        //update the grid pane with the new state
+        for(int row = 0; row < BOARD_SIZE; row++) {
+            for(int col = 0; col < BOARD_SIZE; col++) {
+                boardGridPane.add(BOARD[row][col], col, row);
+            }
+        }
+    }
    
     
     /**
@@ -690,6 +725,7 @@ public class OthelloViewController extends FlowPane {
             logActionsPerformed();
             controlMenus();
             controlshowingOfValidMoves();
+            updateBoardState(othelloModel.getBoard());
         }
         
         /**
@@ -736,19 +772,20 @@ public class OthelloViewController extends FlowPane {
             List<int[]> validMoves = new ArrayList<>();
             for(int row = 0; row < BOARD_SIZE; row++) {
                 for(int col = 0; col < BOARD_SIZE; col++) {
-                    if(othelloModel.isValidMove(row, col, currentPlayer)) {
+                    if(othelloModel.canMove(row, col, currentPlayer)) {
                         validMoves.add(new int[]{row, col});
                     }
-                    
                 }
             }
             int[][] validMovesArray =  new int [validMoves.size()][0];
             for(int i = 0; i < validMoves.size(); i++) {
                 validMovesArray[i] = validMoves.get(i);
             }
-//            System.out.println(Arrays.toString(validMoves.get(0)));
             return validMovesArray;
-      }
+        }
+        
+        
+        
         
         /**
          * Controls the game menus
@@ -761,6 +798,31 @@ public class OthelloViewController extends FlowPane {
             yellowMenuItem.setOnAction((e) -> changeBoardColors("#f8fc03", "WHITE"));
         }
         
+        /**
+         * Skips a player's turn if they do not have any valid moves
+         */
+        private void skipTurn() {
+            logToGameChat("Player " + currentPlayer + "has no valid moves. Press skip.");
+            moveButton.setText("Skip");
+            currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        }
+        
+        private void play() {
+            if(!othelloModel.moveTest(currentPlayer)) {
+                skipTurn();
+            }
+            else {
+                moveButton.setText("Move");
+            }
+        }
+        
+        /**
+         * Logs a message to the game chat
+         * @param message the message to log
+         */
+        private void logToGameChat(String message) {
+            
+        }
         /**
          * Controls showing of valid moves
          */
