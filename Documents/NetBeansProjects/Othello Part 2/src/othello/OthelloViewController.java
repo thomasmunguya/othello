@@ -54,6 +54,7 @@ public class OthelloViewController extends FlowPane {
     private MenuItem yellowMenuItem;
     private MenuItem purpleMenuItem;
     private Menu boardColoursMenu;
+    private int currentPlayer = 2;
     
     /**
      * Instantiates an OthelloViewController
@@ -177,6 +178,7 @@ public class OthelloViewController extends FlowPane {
                 
                 BorderPane boardSquare = new BorderPane();
                 boardSquare.setPrefSize(60.0, 60.0);
+                boardSquare.setId(i + "" + j);
                 
                 
                 if((i % 2 == 0) == (j % 2 == 0)) {
@@ -186,9 +188,10 @@ public class OthelloViewController extends FlowPane {
                     boardSquare.setStyle("-fx-background-color: " + boardColor1 + ";");
                 }
                    
-                boardGridPane.add(boardSquare, i, j);
-                InitializeGame();
+                boardGridPane.add(boardSquare, j, i);
                 BOARD[i][j] = boardSquare;
+                
+                
             }
         }
         return boardGridPane;
@@ -654,14 +657,26 @@ public class OthelloViewController extends FlowPane {
      * @param validMoves valid moves to show
      */
     public void showValidMoves(int[][] validMoves) {
-        for(int row = 0; row < validMoves.length; row++) {
-            for(int col = 0; col < validMoves[0].length; col++) {
-               if(boardGridPane.getChildren().get((row * BOARD_SIZE) + col).equals(BOARD[row][col])) {
-                        setBorder(new Border(new BorderStroke(Color.GREEN, 
-                            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.0, 1.0, 1.0, 1.0))));
-                    }      
-                }
+        //if an empty array is passed it means the valid moves should not be shown
+        //Remove the borders from the squares if so
+        if(validMoves.length == 0) {
+            boardGridPane.getChildren().forEach(square -> {
+                ((BorderPane) square).setBorder(Border.EMPTY);
+            });
+        }
+        
+        //otherwise, show the valid movies by adding a green border to the squares
+        //which are valid moves
+        for (int[] validMove : validMoves) {
+            int validMoveRow = validMove[0];
+            int validMoveCol = validMove[1];
+            if(BOARD[validMoveRow][validMoveCol].equals(
+                    ((BorderPane)boardGridPane.getChildren().get((validMoveRow * BOARD_SIZE) + validMoveCol)))) {
+                ((BorderPane)boardGridPane.getChildren().get((validMoveRow * BOARD_SIZE) + validMoveCol)).setBorder(
+                        new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
+                                new BorderWidths(5.0, 5.0, 5.0, 5.0))));
             }
+        }      
          
     }
    
@@ -698,6 +713,12 @@ public class OthelloViewController extends FlowPane {
             });
             
             showValidMovesCheckBox.setOnAction((e) -> {
+                if(showValidMovesCheckBox.isSelected()) {
+                    showValidMoves(getValidMoves());
+                }
+                else {
+                    showValidMoves(new int[0][0]);
+                }
                 System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());
             });
             
@@ -710,6 +731,24 @@ public class OthelloViewController extends FlowPane {
             });
             
         }
+        
+        private int[][] getValidMoves() {
+            List<int[]> validMoves = new ArrayList<>();
+            for(int row = 0; row < BOARD_SIZE; row++) {
+                for(int col = 0; col < BOARD_SIZE; col++) {
+                    if(othelloModel.isValidMove(row, col, currentPlayer)) {
+                        validMoves.add(new int[]{row, col});
+                    }
+                    
+                }
+            }
+            int[][] validMovesArray =  new int [validMoves.size()][0];
+            for(int i = 0; i < validMoves.size(); i++) {
+                validMovesArray[i] = validMoves.get(i);
+            }
+//            System.out.println(Arrays.toString(validMoves.get(0)));
+            return validMovesArray;
+      }
         
         /**
          * Controls the game menus
@@ -726,12 +765,12 @@ public class OthelloViewController extends FlowPane {
          * Controls showing of valid moves
          */
         public void controlshowingOfValidMoves() {
-            showValidMovesCheckBox.selectedProperty().addListener((ov) -> {
-                if(showValidMovesCheckBox.isSelected()) {
-                    int[][] validMoves = {{0, 0}};
-                    showValidMoves(validMoves);
-                }
-                });
+//            showValidMovesCheckBox.selectedProperty().addListener((ov) -> {
+//                if(showValidMovesCheckBox.isSelected()) {
+//                    int[][] validMoves = {{0, 0}};
+//                    showValidMoves(validMoves);
+//                }
+//                });
             }
         }
 }

@@ -9,7 +9,7 @@ public class OthelloModel {
     private final int[][] BOARD = new int[BOARD_SIZE][BOARD_SIZE];
     
     private OthelloModel() {
-        
+        prepareBoard(0);
     }
     
     /**
@@ -64,11 +64,109 @@ public class OthelloModel {
        
     }
     
+    public boolean isLegalMove(int row, int col, int player) {
+        boolean isValidMove = false;
+        int[][] adjactantFields = {
+            {-1, -1},
+            {0, -1}, 
+            {1, -1},
+            {-1, 0},
+            {1, 0}, 
+            {-1, 1}, 
+            {0, 1},
+            {1, 1}};
+        
+        //if the square is not on the board, return false because a move
+        //cannot be made to that position
+        if(!isPositionOnBoard(row, col)) {
+            return false;
+        }
+        
+        for(int[] square: adjactantFields) {
+            int tempRow = row + square[0];
+            int tempCol = col + square[1];
+            System.out.println(tempRow + "," + tempCol);
+            if(!isPositionOnBoard(tempRow, tempCol)) {
+                continue;
+            }
+            if(isPositionOnBoard(tempRow, tempCol) && getSquare(tempRow, tempCol) == 0) {
+                isValidMove = true;
+            }
+        }
+        if(getSquare(row, col) != 0) {
+            isValidMove = false;
+        }
+        return isValidMove;
+    }
+    
+    public boolean isValidMove(int row, int col, int player) {
+        int rowdelta = 0;     /* Row increment around a square    */
+        int coldelta = 0;     /* Column increment around a square */
+        int x = 0;            /* Row index when searching         */
+        int y = 0;            /* Column index when searching      */
+   
+
+        /* Set the opponent            */
+        int opponent = (player == 1)? 2 : 1; 
+        /* Check all the squares around the blank square  */ 
+       /* for the opponents counter                      */
+       for(rowdelta = -1; rowdelta <= 1; rowdelta++)
+         for(coldelta = -1; coldelta <= 1; coldelta++)
+         { 
+           /* Don't check outside the array, or the current square */
+           if(row + rowdelta < 0 || row + rowdelta >= BOARD_SIZE ||
+              col + coldelta < 0 || col + coldelta >= BOARD_SIZE || 
+                                       (rowdelta==0 && coldelta==0))
+             continue;
+
+           /* Now check the square */
+           if(BOARD[row + rowdelta][col + coldelta] == opponent)
+           {
+             /* If we find the opponent, move in the delta direction  */
+             /* over opponent counters searching for a player counter */
+             x = row + rowdelta;                /* Move to          */
+             y = col + coldelta;                /* opponent square  */
+
+             /* Look for a player square in the delta direction */
+             for(;;)
+             {
+               x += rowdelta;                  /* Go to next square */
+               y += coldelta;                  /* in delta direction*/
+
+               /* If we move outside the array, give up */
+               if(x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE)
+                 break;
+
+               /* If we find a blank square, give up */ 
+               if(BOARD[x][y] == 0)
+                 break;
+                /*  If the square has a player counter */
+                /*  then we have a valid move          */
+               if(BOARD[x][y] == player)
+               {
+                  return true;
+               }
+             } 
+           } 
+         }  
+       return false;
+    }
+    
+    /**
+     * Checks if a position is on the board
+     * @param row the column index of the position
+     * @param col the row index of the position
+     * @return true if the position is on the board, and false otherwise
+     */
+    private boolean isPositionOnBoard(int row, int col) {
+        return (row < 8 && row > -1) && (col < 8 && col > -1);
+    }
+    
     /**
      * checks if a player (1 for black, 2 for white) may make a valid move
      * at that particular square. 
-     * @param row
-     * @param col
+     * @param row the row index of the square at which the player would like to move
+     * @param col the col index of the square at which the player would like to move
      * @return true if yes, false if no.
      */
     public boolean canMove(int row, int col, int player) {
@@ -95,6 +193,7 @@ public class OthelloModel {
                     posX = col + x;
                     posY = row + y;
                     found = false;
+                    System.out.println("posY = " + posY + ", PosX = " + posX);
                     current = BOARD[posY][posX];
 					
                     // Check the first cell in the direction specified by x and y
@@ -148,7 +247,7 @@ public class OthelloModel {
     /**
      * Returns true if the given player has a valid move they can do at all, anywhere on the 
      * board.
-     * @param player the player to test move for
+     * @param player the player to test the move for
      * @return true if the given player has a valid move they can do at all, anywhere on the 
      * board, and false otherwise
      */
