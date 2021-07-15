@@ -6,9 +6,21 @@ import java.util.Arrays;
 
 public class OthelloModel {
     
+    public static final int NORMAL=0;
+    public static final int CORNER_TEST=1;
+    public static final int OUTER_TEST=2;
+    public static final int TEST_CAPTURE=3;
+    public static final int TEST_CAPTURE2=4;
+    public static final int UNWINNABLE=5;
+    public static final int INNER_TEST=6;
+    public static final int ARROW=7;
+
+    public static final int EMPTY=0;
+    public static final int BLACK=1;
+    public static final int WHITE=2;
     private static OthelloModel othelloModel;
     private final int BOARD_SIZE = 8;
-    private final int[][] BOARD = new int[BOARD_SIZE][BOARD_SIZE];
+    private int[][] board = new int[BOARD_SIZE][BOARD_SIZE];
     public final static int PLAYER_1 = 1;
     public final static int PLAYER_2= 2;
     private int lastRowDelta = 0;
@@ -27,7 +39,7 @@ public class OthelloModel {
      * @return the board clone
      */
     public int[][] getBoard() {
-        return BOARD.clone();
+        return board.clone();
     }
     /**
      * Returns an instance of OthelloModel
@@ -50,36 +62,113 @@ public class OthelloModel {
      * @return the contents of a given square (0 for empty, 1 for black, 2 for white)
      */
     public int getSquare(int row, int col) {
-        return BOARD[col][row];
+        return board[col][row];
     }
     
     /**
      * This method prepares a board layout based on the mode
      * @param mode the mode for which to prepare the board layout
      */
-    public void prepareBoard(int mode) {
-        switch(mode) {
-            //Normal game layout
-            case 0: {
-            BOARD[3][3] = 2;
-            BOARD[4][4] = 2;
-            BOARD[3][4] = 1;
-            BOARD[4][3] = 1;
-            break;
-            }
-            
-            //Corner test layout
-            case 1: {
-            BOARD[3][3] = 2;
-            BOARD[4][4] = 2;
-            BOARD[3][4] = 1;
-            BOARD[4][3] = 1;
-            break;
-            }
-            
-        }
-       
-    }
+    public void prepareBoard(int mode)
+	{
+		switch (mode)
+		{
+		case CORNER_TEST: 
+			board = new int[][]{
+				{2, 0, 0, 0, 0, 0, 0, 1},
+				{0, 1, 0, 0, 0, 0, 2, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 1, 0, 0, 0, 0, 1, 0},
+                                {2, 0, 0, 0, 0, 0, 0, 2}};
+                                break;
+                
+		case OUTER_TEST:
+			board = new int[][] {
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 2, 2, 2, 2, 2, 2, 0},
+				{0, 2, 1, 1, 1, 1, 2, 0},
+				{0, 2, 1, 0, 0, 1, 2, 0},
+				{0, 2, 1, 0, 0, 1, 2, 0},
+				{0, 2, 1, 1, 1, 1, 2, 0},
+				{0, 2, 2, 2, 2, 2, 2, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}};
+			break;
+                
+		case INNER_TEST:
+			board = new int[][] {
+				{2, 2, 2, 2, 2, 2, 2, 2},
+				{2, 0, 0, 0, 0, 0, 0, 2},
+				{2, 0, 2, 2, 2, 2, 0, 2},
+				{2, 0, 2, 1, 1, 2, 0, 2},
+				{2, 0, 2, 1, 1, 2, 0, 2},
+				{2, 0, 2, 2, 2, 2, 0, 2},
+				{2, 0, 0, 0, 0, 0, 0, 2},
+				{2, 2, 2, 2, 2, 2, 2, 2}};
+			break;
+                
+		case UNWINNABLE:
+			board = new int[][] {
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}};
+			break;
+                
+		case TEST_CAPTURE:
+			board  = new int[][]{
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 1, 1, 1, 1, 1, 1, 0},
+				{0, 1, 1, 1, 1, 1, 1, 0},
+				{0, 1, 2, 2, 2, 1, 1, 0},
+				{0, 1, 2, 0, 2, 1, 1, 0},
+				{0, 1, 2, 2, 2, 1, 1, 0},
+				{0, 1, 1, 1, 1, 1, 1, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}};
+				break;
+				
+		case TEST_CAPTURE2:
+			board = new int[][]{
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1},
+				{1, 2, 2, 2, 1, 2, 1, 1},
+				{1, 2, 2, 2, 2, 2, 1, 1},
+				{1, 2, 2, 0, 2, 2, 1, 1},
+				{1, 2, 2, 2, 2, 1, 1, 1},
+				{1, 2, 1, 2, 2, 2, 1, 1},
+				{1, 1, 1, 1, 1, 1, 1, 1}};
+				break;
+                
+                case ARROW:
+                        board = new int[][]{
+                                {0, 0, 0, 1, 1, 0, 0, 0},
+                                {0, 0, 1, 1, 1, 1, 0, 0},
+                                {0, 1, 0, 1, 1, 0, 1, 0},
+                                {1, 0, 0, 1, 1, 0, 0, 1},
+                                {0, 0, 0, 1, 1, 0, 0, 0},
+                                {0, 0, 0, 1, 1, 0, 0, 0},
+                                {0, 0, 0, 1, 1, 0, 0, 0},
+                                {0, 0, 0, 1, 1, 0, 0, 0}};
+                break;
+                
+		default:
+			board = new int[][]{
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 2, 1, 0, 0, 0},
+				{0, 0, 0, 1, 2, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}};
+		}	
+	}
     
     /**
      * checks if a player (1 for black, 2 for white) may make a valid move
@@ -106,7 +195,7 @@ public class OthelloModel {
                 col + coldelta < 0 || col + coldelta >= BOARD_SIZE || 
                                        (rowdelta==0 && coldelta==0)) continue;
            /* Now check the square */
-           if(BOARD[row + rowdelta][col + coldelta] == opponent) {
+           if(board[row + rowdelta][col + coldelta] == opponent) {
                 /* If we find the opponent, move in the delta direction  */
                 /* over opponent counters searching for a player counter */
                 x = row + rowdelta;                /* Move to          */
@@ -123,13 +212,13 @@ public class OthelloModel {
                     }
                      
                     /* If we find a blank square, give up */ 
-                    if(BOARD[x][y] == 0) {
+                    if(board[x][y] == 0) {
                         break;
                     }
                     
                     /*  If the square has a player counter */
                     /*  then we have a valid move          */
-                    if(BOARD[x][y] == player){
+                    if(board[x][y] == player){
                         lastRowDelta = rowdelta;
                         lastColDelta = coldelta;
                         lastX = x;
@@ -155,16 +244,11 @@ public class OthelloModel {
     public int tryMove(int row, int col, int player) {
         int chipsCaptured = 0;
         if(canMove(row, col, player)) {
-            BOARD[row][col] = player;
-            while(BOARD[lastX -= lastRowDelta][lastY -= lastColDelta] == opponent) {
-                System.out.println("Opponents is" + opponent);
+            board[row][col] = player;
+            while(board[lastX -= lastRowDelta][lastY -= lastColDelta] == opponent) {
                 /* Opponent? */
-               BOARD[lastX][lastY] = player;    /* Yes, change it */
-               
+               board[lastX][lastY] = player;    /* Yes, change it */
                chipsCaptured++;
-            }
-            for(int i = 0; i < BOARD_SIZE; i++) {
-                System.out.println(Arrays.toString(BOARD[i]));
             }
             
         }
@@ -197,10 +281,11 @@ public class OthelloModel {
         int chipCount = 0;
         for(int row = 0; row < BOARD_SIZE; row++) {
             for(int col = 0; col < BOARD_SIZE; col++) {
-                if(BOARD[row][col] == player)
+                if(board[row][col] == player)
                     chipCount++;
             }   
         }
+        System.out.println("Player" + player + " chip count: " + chipCount);
         return chipCount;
     }
     
