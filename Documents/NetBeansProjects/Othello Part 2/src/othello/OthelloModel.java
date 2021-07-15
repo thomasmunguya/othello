@@ -140,6 +140,7 @@ public class OthelloModel {
        return false;
     }
     
+    
     /**
      * attempts to make a move.
      * It will also update its internal board model if the move is legal
@@ -152,6 +153,7 @@ public class OthelloModel {
     public int tryMove(int row, int col, int player) {
         int chipsCaptured = 0;
         if(canMove(row, col, player)) {
+            BOARD[row][col] = player;
             while(BOARD[lastX -= lastRowDelta][lastY -= lastColDelta] == opponent) {
                 /* Opponent? */
                BOARD[lastX][lastY] = player;    /* Yes, change it */
