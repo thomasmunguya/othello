@@ -651,7 +651,7 @@ public class OthelloViewController extends FlowPane {
         Alert aboutDialogBox = new Alert(Alert.AlertType.INFORMATION);
         aboutDialogBox.setTitle("About");
         aboutDialogBox.setHeaderText("About");
-        aboutDialogBox.setContentText("Othello Game\nby Thomas Munguya\n\nJuly 2021");
+        aboutDialogBox.setContentText("Othello Game\nby Thomas Munguya\n\nJuly 2021"); //TODO: Change this to client's name
         aboutDialogBox.show();
     }
     
@@ -719,10 +719,8 @@ public class OthelloViewController extends FlowPane {
      * @param col the col index of the square to move the cursor to
      */
     public void updateCursorPosition(int row, int col) {
-        System.out.println(row + ", " + col);
         //if the square is not on the board don't move the cursor, do nothing
         if(!isSquareOnBoard(row, col)) {
-            System.out.println("The square is not on the board");
             return;
         }
         //otherwise
@@ -819,6 +817,10 @@ public class OthelloViewController extends FlowPane {
             
         }
         
+        /**
+         * Gets the list of valid moves for the current player
+         * @return the list of valid of moves
+         */
         private int[][] getValidMoves() {
             List<int[]> validMoves = new ArrayList<>();
             for(int row = 0; row < BOARD_SIZE; row++) {
@@ -925,6 +927,7 @@ public class OthelloViewController extends FlowPane {
                 currentPlayer = (currentPlayer == 1) ? 2 : 1;
                 showValidMoves(new int[0][0]);
                 showValidMoves(getValidMoves());
+                System.out.println((((ImageView)((BorderPane)boardGridPane.getChildren().get((4 * BOARD_SIZE) + 4)).getCenter()).getImage().impl_getUrl()));
             }
         }
         

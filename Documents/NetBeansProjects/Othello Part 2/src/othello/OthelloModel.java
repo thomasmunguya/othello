@@ -1,6 +1,8 @@
 
 package othello;
 
+import java.util.Arrays;
+
 
 public class OthelloModel {
     
@@ -155,11 +157,16 @@ public class OthelloModel {
         if(canMove(row, col, player)) {
             BOARD[row][col] = player;
             while(BOARD[lastX -= lastRowDelta][lastY -= lastColDelta] == opponent) {
+                System.out.println("Opponents is" + opponent);
                 /* Opponent? */
                BOARD[lastX][lastY] = player;    /* Yes, change it */
+               
                chipsCaptured++;
             }
-        
+            for(int i = 0; i < BOARD_SIZE; i++) {
+                System.out.println(Arrays.toString(BOARD[i]));
+            }
+            
         }
         return chipsCaptured;
     }
