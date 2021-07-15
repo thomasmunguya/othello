@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -30,6 +31,7 @@ public class OthelloViewController extends FlowPane {
     
     private final int BOARD_SIZE = 8;
     private final BorderPane[][] BOARD = new BorderPane[BOARD_SIZE][BOARD_SIZE];
+    private final int[] cursorPosition = {0, 0};
     private Button upButton;
     private Button downButton;
     private Button leftButton;
@@ -91,6 +93,7 @@ public class OthelloViewController extends FlowPane {
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
         this.getChildren().addAll(setUpMenu(), setUpMainGridPane(), consoleFlowPane);
         new Controller();
+        InitializeGame();
         
     }
     
@@ -523,6 +526,7 @@ public class OthelloViewController extends FlowPane {
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0, 5.0, 0))));
         gameChatTextArea.setStyle("-fx-control-inner-background: rgb(175, 175, 255)");
         gameChatTextArea.setEditable(false);
+        gameChatTextArea.setWrapText(true);
         
        
         
@@ -540,21 +544,27 @@ public class OthelloViewController extends FlowPane {
      * Initialises the game
      */
     private void InitializeGame() {
+        BOARD[0][0].setBorder(
+                        new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+                                CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
+        ((BorderPane)boardGridPane.getChildren().get((0 * BOARD_SIZE) + 0)).setBorder(
+                        new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+                                CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
         
-        //remove all the pieces from the board
-        boardGridPane.getChildren().forEach(square -> ((BorderPane)square).getChildren().clear());
-        
-        //add pieces to the center of the board to initialize the game
-        for(int i = 0; i < BOARD_SIZE; i++) {
-            for(int j = 0; j < BOARD_SIZE; j++) {
-                if((i == 4 - 1 && j == 4 - 1) | (i == 5 - 1 && j == 5 - 1) ) {
-                    boardGridPane.add(new BorderPane(new ImageView("images/white.png"), null, null, null, null), i, j);
-                }
-                if((i == 4 - 1 && j == 5 - 1) | (i == 5 - 1 && j == 4 - 1) ) {
-                    boardGridPane.add(new BorderPane(new ImageView("images/black.png"), null, null, null, null), i, j);
-                }
-            }
-        }
+//        //remove all the pieces from the board
+//        boardGridPane.getChildren().forEach(square -> ((BorderPane)square).getChildren().clear());
+//        
+//        //add pieces to the center of the board to initialize the game
+//        for(int i = 0; i < BOARD_SIZE; i++) {
+//            for(int j = 0; j < BOARD_SIZE; j++) {
+//                if((i == 4 - 1 && j == 4 - 1) | (i == 5 - 1 && j == 5 - 1) ) {
+//                    boardGridPane.add(new BorderPane(new ImageView("images/white.png"), null, null, null, null), i, j);
+//                }
+//                if((i == 4 - 1 && j == 5 - 1) | (i == 5 - 1 && j == 4 - 1) ) {
+//                    boardGridPane.add(new BorderPane(new ImageView("images/black.png"), null, null, null, null), i, j);
+//                }
+//            }
+//        }
     }
     
      
@@ -566,16 +576,21 @@ public class OthelloViewController extends FlowPane {
         
         //set up the menu items
         newGameMenuItem = new MenuItem("New Game");
+        newGameMenuItem.setAccelerator(KeyCombination.keyCombination("Ctrl + N"));
         
         loadMenuItem = new MenuItem("Load");
         loadMenuItem.setDisable(true);
+        loadMenuItem.setAccelerator(KeyCombination.keyCombination("Ctrl + L"));
         
         saveMenuItem = new MenuItem("Save");
         saveMenuItem.setDisable(true);
+        saveMenuItem.setAccelerator(KeyCombination.keyCombination("Ctrl + S"));
         
         exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setAccelerator(KeyCombination.keyCombination("Ctrl + E"));
         
-        Menu fileMenu = new Menu("File");
+        Menu fileMenu = new Menu("_File");
+        fileMenu.setMnemonicParsing(true);
         fileMenu.getItems().addAll(newGameMenuItem, loadMenuItem, saveMenuItem, exitMenuItem);
         
         canadianMenuItem = new MenuItem("Canadian");
@@ -600,13 +615,15 @@ public class OthelloViewController extends FlowPane {
                 timesOneCaptureTestMenuItem, timesTwoCaptureTestMenuItem, emptyBoardMenuItem,
                 innerSquareTestMenuItem, upArrowOrientationTestMenuItem);
         
-        Menu gameMenu = new Menu("Game");
+        Menu gameMenu = new Menu("_Game");
+        gameMenu.setMnemonicParsing(true);
         gameMenu.getItems().addAll(boardColoursMenu, debugScenariosMenu);
         
         aboutMenuItem = new MenuItem("About");
-        aboutMenuItem.setOnAction((e) -> showAboutDialogBox());
+        aboutMenuItem.setAccelerator(KeyCombination.keyCombination("Ctrl + H"));
         
-        Menu helpMenu = new Menu("Help");
+        Menu helpMenu = new Menu("_Help");
+        helpMenu.setMnemonicParsing(true);
         helpMenu.getItems().add(aboutMenuItem);
         
         MenuBar menuBar = new MenuBar();
@@ -624,20 +641,6 @@ public class OthelloViewController extends FlowPane {
                 square.setStyle("-fx-background-color: " + secondColor + ";");
             }
         });
-//        for(int i = 0; i < BOARD_SIZE; i++) {
-//            for(int j = 0; j < BOARD_SIZE; j++) {
-//                if(BOARD[i][j].getStyle().equals("-fx-background-color: BLACK;")) {
-//                    BOARD[i][j].setStyle("-fx-background-color: " + firstColor + ";");
-//                    boardGridPane.getChildren().remove(BOARD[i][j]);
-//                    boardGridPane.add(BOARD[i][j], i, j);
-//                }
-//                if(BOARD[i][j].getStyle().equals("-fx-background-color: WHITE;")) {
-//                    BOARD[i][j].setStyle("-fx-background-color: " + secondColor + ";");
-//                    boardGridPane.getChildren().remove(BOARD[i][j]);
-//                    boardGridPane.add(BOARD[i][j], i, j);
-//                }
-//            }
-//        }
         
     }
     
@@ -715,6 +718,42 @@ public class OthelloViewController extends FlowPane {
         }
     }
    
+    /**
+     * Updates the square selecting cursor to a new position
+     * @param currentRow the row index of the square that the cursor is currently on
+     * @param currentCol the col index of the square that the cursor is currently on
+     * @param newRow the row index of the square to move the cursor to
+     * @param newCol the col index of the square to move the cursor to
+     */
+    public void updateCursorPosition(int row, int col) {
+        System.out.println(row + ", " + col);
+        //if the square is not on the board don't move the cursor, do nothing
+        if(!isSquareOnBoard(row, col)) {
+            System.out.println("The square is not on the board");
+            return;
+        }
+        //otherwise
+        //remove the border from the current square
+        BOARD[cursorPosition[0]][cursorPosition[1]].setBorder(Border.EMPTY);
+        BOARD[cursorPosition[0]][cursorPosition[1]].setBorder(
+                        new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+                                CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
+        
+        //Update the squares on the grid pane holding the squares
+        ((BorderPane)boardGridPane.getChildren().get((cursorPosition[0] * BOARD_SIZE) + cursorPosition[1])).setBorder(Border.EMPTY);
+        ((BorderPane)boardGridPane.getChildren().get((row * BOARD_SIZE) + col)).setBorder(
+                        new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+                                CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
+    }
+    
+    /**
+     * A convenience method for checking if a square is on the board
+     * @param row the row index of the square
+     * @param col the col index of the square
+     */
+    private boolean isSquareOnBoard(int row, int col) {
+        return (row < 8 && row > -1) && (col < 8 && col > -1);
+    }
     
     /**
      * An inner Controller class for controlling the UI
@@ -725,6 +764,7 @@ public class OthelloViewController extends FlowPane {
             logActionsPerformed();
             controlMenus();
             controlshowingOfValidMoves();
+            controlCursorPosition();
             updateBoardState(othelloModel.getBoard());
         }
         
@@ -732,21 +772,21 @@ public class OthelloViewController extends FlowPane {
          * Logs information when a button is pressed or when the tick box is checked/ unchecked
          */
         public void logActionsPerformed() {
-           upButton.setOnAction((e) -> {
-                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
-            });
-            
-            downButton.setOnAction((e) -> {
-                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
-            });
-            
-            leftButton.setOnAction((e) -> {
-                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
-            });
-            
-            rightButton.setOnAction((e) -> {
-                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());
-            });
+//           upButton.setOnAction((e) -> {
+//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
+//            });
+//            
+//            downButton.setOnAction((e) -> {
+//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
+//            });
+//            
+//            leftButton.setOnAction((e) -> {
+//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
+//            });
+//            
+//            rightButton.setOnAction((e) -> {
+//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());
+//            });
             
             showValidMovesCheckBox.setOnAction((e) -> {
                 if(showValidMovesCheckBox.isSelected()) {
@@ -813,6 +853,62 @@ public class OthelloViewController extends FlowPane {
             }
             else {
                 moveButton.setText("Move");
+            }
+        }
+        
+        /**
+         * Changes the colour of the squares on the board to the
+         * colours specified by strings
+         * @param firstColour the colour to give to give to the first set of squares
+         * @param secondColour the colour to give to the second set of squares
+         */
+        private void changeBoardColours(String firstColour, String secondColour) {
+            
+        }
+        
+        /**
+         * Controls the position of the move cursor
+         */
+        private void controlCursorPosition() {
+            upButton.setOnAction((e) -> {
+                if(cursorPosition[0] > 0) {
+                    updateCursorPosition(cursorPosition[0] - 1, cursorPosition[1]);
+                    cursorPosition[0] -= 1;
+                }
+                
+            });
+            
+            downButton.setOnAction((e) -> {
+                if(cursorPosition[0] < 7) {
+                    updateCursorPosition(cursorPosition[0] + 1, cursorPosition[1]);
+                    cursorPosition[0] += 1;
+                }
+            });
+            
+            leftButton.setOnAction((e) -> {
+                if(cursorPosition[1] > 0) {
+                    updateCursorPosition(cursorPosition[0], cursorPosition[1] - 1);
+                    cursorPosition[1] -= 1;
+                }
+                
+            });
+            
+            rightButton.setOnAction((e) -> {
+                if(cursorPosition[1] < 7) {
+                    updateCursorPosition(cursorPosition[0], cursorPosition[1] + 1);
+                    cursorPosition[1] += 1;
+                }
+                
+            });
+        }
+        
+        /**
+         * Attempts a move. If the move is valid, the player's piece will move 
+         * to that particular position. If the move is not valid. Nothing happens
+         */
+        private void attemptMove() {
+            if(othelloModel.canMove(cursorPosition[1], cursorPosition[0], currentPlayer)) {
+                
             }
         }
         
