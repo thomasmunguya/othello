@@ -14,45 +14,30 @@ public class OthelloModel {
     public static final int UNWINNABLE=5;
     public static final int INNER_TEST=6;
     public static final int ARROW=7;
-
+    
     public static final int EMPTY=0;
     public static final int BLACK=1;
     public static final int WHITE=2;
-    private static OthelloModel othelloModel;
+    
     private final int BOARD_SIZE = 8;
-    private int[][] board = new int[BOARD_SIZE][BOARD_SIZE];
-    public final static int PLAYER_1 = 1;
-    public final static int PLAYER_2= 2;
+    private int[][] board;
     private int lastRowDelta = 0;
     private int lastColDelta = 0;
     private int lastX = 0;
     private int lastY = 0;
     private int opponent = 0;
     
-    private OthelloModel() {
-        prepareBoard(0);
+    public OthelloModel() {
+        prepareBoard(NORMAL);
     }
     
     /**
-     * Returns a copy of the current board to prevent other classes from
+     * Returns a clone of the current board to prevent other classes from
      * making changes to the actual board directly
      * @return the board clone
      */
     public int[][] getBoard() {
         return board.clone();
-    }
-    /**
-     * Returns an instance of OthelloModel
-     * This method is used to implement ensure that the game has exactly one
-     * model
-     * @return an OthelloModel instance 
-     */
-    public static OthelloModel getInstance() {
-        if(othelloModel == null) {
-            othelloModel = new OthelloModel();
-            return othelloModel;
-        }
-        return othelloModel;
     }
     
     /**
@@ -285,7 +270,6 @@ public class OthelloModel {
                     chipCount++;
             }   
         }
-        System.out.println("Player" + player + " chip count: " + chipCount);
         return chipCount;
     }
     
