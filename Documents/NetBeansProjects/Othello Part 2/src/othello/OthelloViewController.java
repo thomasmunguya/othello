@@ -556,7 +556,7 @@ public class OthelloViewController extends FlowPane {
     /**
      * Initialises the game cursor
      */
-    private void initializeCursor() {
+    public void initializeCursor() {
         BOARD[0][0].setBorder(
                         new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
                                 CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
@@ -565,7 +565,6 @@ public class OthelloViewController extends FlowPane {
                                 CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
     }
     
-     
     /**
      * Assembles the game menu
      * @return a menu bar with menu items
@@ -641,8 +640,6 @@ public class OthelloViewController extends FlowPane {
     }
     
     public void changeBoardColors(String firstColor, String secondColor) {
-        System.out.println("Previous first color" + boardColor1);
-        System.out.println("Previous second color" + boardColor2);
         boardGridPane.getChildren().forEach(square -> {
             if(square.getStyle().equals("-fx-background-color: " + boardColor1 + ";")) {
                 square.setStyle("-fx-background-color: " + firstColor + ";");
@@ -671,22 +668,24 @@ public class OthelloViewController extends FlowPane {
      */
     public void showValidMoves(int[][] validMoves) {
         //if an empty array is passed it means the valid moves should not be shown
-        //Remove the borders from the squares if so
+        //Remove the checkmarks from the valid moves squares if so
         for(int row = 0; row < BOARD_SIZE; row++) {
             for(int col = 0; col < BOARD_SIZE; col++) {
                 if(othelloModel.getBoard()[row][col] == 0) {
+                    BOARD[row][col].setCenter(null);
                     ((BorderPane)boardGridPane.getChildren().get((row * BOARD_SIZE) + col)).setCenter(null);
                 }
             }
         }
         
-        //otherwise, show the valid movies by adding a green border to the squares
+        //otherwise, show the valid movies by adding a checkmark to the squares
         //which are valid moves
         for (int[] validMove : validMoves) {
             int validMoveRow = validMove[0];
             int validMoveCol = validMove[1];
             if(BOARD[validMoveRow][validMoveCol].equals(
                     ((BorderPane)boardGridPane.getChildren().get((validMoveRow * BOARD_SIZE) + validMoveCol)))) {
+                BOARD[validMoveRow][validMoveCol].setCenter(new ImageView("images/checkmark.png"));
                 ((BorderPane)boardGridPane.getChildren().get((validMoveRow * BOARD_SIZE) + validMoveCol))
                         .setCenter(new ImageView("images/checkmark.png"));
             }
@@ -699,17 +698,28 @@ public class OthelloViewController extends FlowPane {
      * @param newBoardState the new state of the board
      */
     public void updateBoardState(int[][] newBoardState) {
+//        for(int row = 0; row < BOARD_SIZE; row++) {
+//            System.out.println(Arrays.toString(newBoardState[row]));
+//        }
+//        System.out.println();
+//        System.out.println();
         
         //update the board state with the new state
         for(int row = 0; row < BOARD_SIZE; row++) {
             for(int col = 0; col < BOARD_SIZE; col++) {
-                BorderPane square = new BorderPane();
                 if(newBoardState[row][col] == OthelloModel.BLACK) {
                     BOARD[row][col].setCenter(new ImageView("images/black.png"));
                     ((BorderPane)boardGridPane.getChildren().get((row * BOARD_SIZE) + col))
                             .setCenter(new ImageView("images/black.png"));
+                    System.out.println("This square is null: " +  ((BorderPane)boardGridPane.getChildren()
+                            .get((row * BOARD_SIZE) + col))
+                            .getCenter() == null);
                 }
                 else if(newBoardState[row][col] == OthelloModel.WHITE) {
+//                    if(BOARD[row][col].getCenter() != null) {
+//                        System.out.println("This spot is not null");
+//                        return;
+//                    }
                     BOARD[row][col].setCenter(new ImageView("images/white.png"));
                     ((BorderPane)boardGridPane.getChildren().get((row * BOARD_SIZE) + col))
                             .setCenter(new ImageView("images/white.png"));
@@ -746,6 +756,17 @@ public class OthelloViewController extends FlowPane {
         ((BorderPane)boardGridPane.getChildren().get((row * BOARD_SIZE) + col)).setBorder(
                         new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
                                 CornerRadii.EMPTY,new BorderWidths(5.0, 5.0, 5.0, 5.0))));
+    }
+    
+    /**
+     * Resets the the cursor to BOARD[0][0]
+     */
+    public void resetCursor() {
+        BOARD[cursorPosition[0]][cursorPosition[1]].setBorder(Border.EMPTY);
+        ((BorderPane)boardGridPane.getChildren().get((cursorPosition[0] * BOARD_SIZE) + cursorPosition[1])).setBorder(Border.EMPTY);
+        cursorPosition[0] = 0;
+        cursorPosition[1] = 0;
+        
     }
     
     /**
@@ -931,6 +952,7 @@ public class OthelloViewController extends FlowPane {
                     mode = OthelloModel.ARROW;
                 }
             });
+            exitMenuItem.setOnAction((e) -> System.exit(0));
             
         }
         
@@ -939,78 +961,189 @@ public class OthelloViewController extends FlowPane {
         * selected
         */
         public void startNewGame() {
+            resetCursor();
             initializeCursor();
+            currentPlayer = OthelloModel.BLACK;
             switch(mode) {
                 case 0: {
                     othelloModel.prepareBoard(OthelloModel.NORMAL);
                     updateBoardState(othelloModel.getBoard());
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
                     logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
+                             player1ChipCount + " piece(s)");
                     logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
                     break;
                 }
                 case 1: {
                     othelloModel.prepareBoard(OthelloModel.CORNER_TEST);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
                     logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 case 2: {
                     othelloModel.prepareBoard(OthelloModel.OUTER_TEST);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
                     break;
                 }
                 case 3: {
                     othelloModel.prepareBoard(OthelloModel.TEST_CAPTURE);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 case 4: {
                     othelloModel.prepareBoard(OthelloModel.TEST_CAPTURE2);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 case 5: {
                     othelloModel.prepareBoard(OthelloModel.UNWINNABLE);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 case 6: {
                     othelloModel.prepareBoard(OthelloModel.INNER_TEST);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 case 7: {
                     othelloModel.prepareBoard(OthelloModel.ARROW);
                     updateBoardState(othelloModel.getBoard());
-                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " +
-                            othelloModel.chipCount(OthelloModel.BLACK) + " piece(s)");
-                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " + 
-                            othelloModel.chipCount(OthelloModel.WHITE) + " piece(s)");
+                    
+                    int player1ChipCount = othelloModel.chipCount(OthelloModel.BLACK);
+                    int player2ChipCount = othelloModel.chipCount(OthelloModel.WHITE);
+                    
+                    updateScore(player1ChipCount, OthelloModel.BLACK);
+                    updateScore(player2ChipCount, OthelloModel.WHITE);
+                    
+                    logToGameChat("Player " + OthelloModel.BLACK + " initialized with " + 
+                             player1ChipCount + " piece(s)");
+                    logToGameChat("Player " + OthelloModel.WHITE + " initialized with " +
+                            player2ChipCount + " piece(s)");
+                    
+                    if(showValidMovesCheckBox.isSelected()) {
+                        showValidMoves(getValidMoves());
+                    }
+                    
+                    declareWinner();
+                    
                     break;
                 }
                 
@@ -1085,8 +1218,8 @@ public class OthelloViewController extends FlowPane {
                 updateScore(othelloModel.chipCount(2), 2);
                 logToGameChat("Player " + currentPlayer + " has captured " + chipsCaptured + " piece(s)");
                 currentPlayer = (currentPlayer == 1) ? 2 : 1;
-                showValidMoves(new int[0][0]);
-                showValidMoves(getValidMoves());
+//                showValidMoves(new int[0][0]);
+//                showValidMoves(getValidMoves());
                 
             }
         }
@@ -1114,6 +1247,7 @@ public class OthelloViewController extends FlowPane {
                 logToGameChat("Player " + OthelloModel.WHITE + " wins!");
             }
             else if (player1Score == 0 && player2Score == 0) {
+                logToGameChat("GAME OVER");
                 logToGameChat("Its a draw!");
             }
         }

@@ -14,13 +14,13 @@ public class OthelloModel {
     public static final int UNWINNABLE=5;
     public static final int INNER_TEST=6;
     public static final int ARROW=7;
-    
     public static final int EMPTY=0;
     public static final int BLACK=1;
     public static final int WHITE=2;
-    
     private final int BOARD_SIZE = 8;
     private int[][] board;
+    public final static int PLAYER_1 = 1;
+    public final static int PLAYER_2= 2;
     private int lastRowDelta = 0;
     private int lastColDelta = 0;
     private int lastX = 0;
@@ -32,11 +32,13 @@ public class OthelloModel {
     }
     
     /**
-     * Returns a clone of the current board to prevent other classes from
+     * Returns a c of the current board to prevent other classes from
      * making changes to the actual board directly
      * @return the board clone
      */
     public int[][] getBoard() {
+        
+        
         return board.clone();
     }
     
@@ -240,6 +242,74 @@ public class OthelloModel {
         return chipsCaptured;
     }
     
+  public boolean validMove(int r, int c, int color) 
+	{
+		// Initialize boolean legal as false
+		boolean legal = false;
+		
+		// If the cell is empty, begin the search
+		// If the cell is not empty there is no need to check anything 
+		// so the algorithm returns boolean legal as is
+		if (board[r][c] == EMPTY)
+		{
+			// Initialize variables
+			int posX;
+			int posY;
+			boolean found;
+			int current;
+			
+			// Searches in each direction
+			// x and y describe a given direction in 9 directions
+			// 0, 0 is redundant and will break in the first check
+			for (int x = -1; x <= 1; x++)
+			{
+				for (int y = -1; y <= 1; y++)
+				{
+					// Variables to keep track of where the algorithm is and
+					// whether it has found a valid move
+					posX = c + x;
+					posY = r + y;
+					found = false;
+					current = board[posY][posX];
+					
+					// Check the first cell in the direction specified by x and y
+					// If the cell is empty, out of bounds or contains the same color
+					// skip the rest of the algorithm to begin checking another direction
+					if (current == -1 || current == 0 || current == color)
+					{
+						continue;
+					}
+					
+					// Otherwise, check along that direction
+					while (!found)
+					{
+						posX += x;
+						posY += y;
+						current = board[posY][posX];
+						
+						// If the algorithm finds another piece of the same color along a direction
+						// end the loop to check a new direction, and set legal to true
+						if (current == color)
+						{
+							found = true;
+							legal = true;
+							
+						
+						}
+						// If the algorithm reaches an out of bounds area or an empty space
+						// end the loop to check a new direction, but do not set legal to true yet
+						else if (current == -1 || current == 0)
+						{
+							found = true;
+						}
+					}
+				}
+			}
+		}
+
+        return legal;
+    }
+    
     /**
      * Checks if the given player has a valid move they can do at all, anywhere on the 
      * board.
@@ -270,6 +340,7 @@ public class OthelloModel {
                     chipCount++;
             }   
         }
+        System.out.println("Player" + player + " chip count: " + chipCount);
         return chipCount;
     }
     
