@@ -15,16 +15,19 @@ public class OthelloModel {
     public static final int INNER_TEST=6;
     public static final int ARROW=7;
     public static final int EMPTY=0;
+    
     public static final int BLACK=1;
     public static final int WHITE=2;
+    
     private final int BOARD_SIZE = 8;
     private int[][] board;
-    public final static int PLAYER_1 = 1;
-    public final static int PLAYER_2= 2;
+    
     private int lastRowDelta = 0;
     private int lastColDelta = 0;
     private int lastX = 0;
     private int lastY = 0;
+    
+    //a variable to keep track of the opposing player for the current player
     private int opponent = 0;
     
     public OthelloModel() {
@@ -32,20 +35,18 @@ public class OthelloModel {
     }
     
     /**
-     * Returns a c of the current board to prevent other classes from
-     * making changes to the actual board directly
+     * Returns a clone of the current board to prevent other classes from
+     * making changes to the actual board
      * @return the board clone
      */
     public int[][] getBoard() {
-        
-        
         return board.clone();
     }
     
     /**
      * Returns the contents of a square
-     * @param row the row number of the square
-     * @param col the column number of the square
+     * @param row the row index of the square
+     * @param col the column index of the square
      * @return the contents of a given square (0 for empty, 1 for black, 2 for white)
      */
     public int getSquare(int row, int col) {
@@ -54,20 +55,19 @@ public class OthelloModel {
     
     /**
      * This method prepares a board layout based on the mode
-     * @param mode the mode for which to prepare the board layout
+     * @param mode the mode in which to prepare the board layout
      */
-    public void prepareBoard(int mode)
-	{
-		switch (mode)
-		{
-		case CORNER_TEST: 
-			board = new int[][]{
-				{2, 0, 0, 0, 0, 0, 0, 1},
-				{0, 1, 0, 0, 0, 0, 2, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
+    public void prepareBoard(int mode) {
+        
+        switch (mode) {
+            case CORNER_TEST: 
+		board = new int[][]{
+                    {2, 0, 0, 0, 0, 0, 0, 1},
+                    {0, 1, 0, 0, 0, 0, 2, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
 				{0, 1, 0, 0, 0, 0, 1, 0},
                                 {2, 0, 0, 0, 0, 0, 0, 2}};
                                 break;
@@ -155,13 +155,14 @@ public class OthelloModel {
 				{0, 0, 0, 0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0, 0, 0, 0}};
 		}	
-	}
+    }
     
     /**
      * checks if a player (1 for black, 2 for white) may make a valid move
-     * at that particular square. 
+     * at a particular square. 
      * @param row the row index of the square at which the player would like to move
      * @param col the col index of the square at which the player would like to move
+     * @param player the player that wants to make a move
      * @return true if yes, false if no.
      */
     public boolean canMove(int row, int col, int player) {
@@ -184,7 +185,7 @@ public class OthelloModel {
            /* Now check the square */
            if(board[row + rowdelta][col + coldelta] == opponent) {
                 /* If we find the opponent, move in the delta direction  */
-                /* over opponent counters searching for a player counter */
+                /* over opponent pieces searching for a player piece */
                 x = row + rowdelta;                /* Move to          */
                 y = col + coldelta;                /* opponent square  */
 
@@ -206,10 +207,6 @@ public class OthelloModel {
                     /*  If the square has a player counter */
                     /*  then we have a valid move          */
                     if(board[x][y] == player){
-                        lastRowDelta = rowdelta;
-                        lastColDelta = coldelta;
-                        lastX = x;
-                        lastY = y;
                         return true;
                     }
                 } 
@@ -220,8 +217,7 @@ public class OthelloModel {
     
     
     /**
-     * attempts to make a move.
-     * It will also update its internal board model if the move is legal
+     * Attempts to make a move and updates the state of the board model if the move is legal
      * @param row the row index at which to attempt the move
      * @param col the col index at which to attempt the move
      * @param player the player
@@ -229,85 +225,57 @@ public class OthelloModel {
      * flipping all appropriate chips to the new colour
      */
     public int tryMove(int row, int col, int player) {
+        
         int chipsCaptured = 0;
-        if(canMove(row, col, player)) {
-            board[row][col] = player;
-            while(board[lastX -= lastRowDelta][lastY -= lastColDelta] == opponent) {
-                /* Opponent? */
-               board[lastX][lastY] = player;    /* Yes, change it */
-               chipsCaptured++;
-            }
+        int rowDelta = 0; // Row increment
+        int coldelta = 0; // Column increment
+        int x = 0; // Row index for searching
+        int y = 0; // Column index for searching
+        
+        // Identify opponent
+        opponent = (player == BLACK) ? WHITE : BLACK;
+        board[row][col] = player; // Place the player piece
+        
+        // Check all squares around this square for opponents piece
+        for(rowDelta = -1 ; rowDelta <= 1 ; ++rowDelta) {
             
+            for(coldelta = -1; coldelta <= 1; ++coldelta) {
+                
+                // Don't check off the board, or the current square
+                if((row == 0 && rowDelta == -1) || row + rowDelta >= BOARD_SIZE ||
+                    (col == 0 && coldelta == -1) || col + coldelta >= BOARD_SIZE ||
+                    (rowDelta == 0 && coldelta == 0)) {
+                    continue;
+                }
+                
+                // Now check the square
+                if(board[row + rowDelta][col + coldelta] == opponent) { 
+                    // Found opponent so search in same direction for player piece
+                    x = row + rowDelta; // Move to opponent
+                    y = col + coldelta; // square
+                
+                    while(true) {
+                    
+                        x += rowDelta; // Move to the
+                        y += coldelta; // next square
+                    
+                        if(x >= BOARD_SIZE || y >= BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
+                            break; // ...give up
+                    
+                        // If we find the player piece, go backward from here
+                        // changing all the opponents counters to player
+                        if(board[x][y] == player) {
+                            while(board[x -= rowDelta][y -= coldelta] == opponent) {
+                                board[x][y] = player; // If its an opponent piece change it
+                                chipsCaptured++; //increment the number of chips captured
+                            } 
+                            break; // We are done
+                        }
+                    }
+                }
+            }
         }
         return chipsCaptured;
-    }
-    
-  public boolean validMove(int r, int c, int color) 
-	{
-		// Initialize boolean legal as false
-		boolean legal = false;
-		
-		// If the cell is empty, begin the search
-		// If the cell is not empty there is no need to check anything 
-		// so the algorithm returns boolean legal as is
-		if (board[r][c] == EMPTY)
-		{
-			// Initialize variables
-			int posX;
-			int posY;
-			boolean found;
-			int current;
-			
-			// Searches in each direction
-			// x and y describe a given direction in 9 directions
-			// 0, 0 is redundant and will break in the first check
-			for (int x = -1; x <= 1; x++)
-			{
-				for (int y = -1; y <= 1; y++)
-				{
-					// Variables to keep track of where the algorithm is and
-					// whether it has found a valid move
-					posX = c + x;
-					posY = r + y;
-					found = false;
-					current = board[posY][posX];
-					
-					// Check the first cell in the direction specified by x and y
-					// If the cell is empty, out of bounds or contains the same color
-					// skip the rest of the algorithm to begin checking another direction
-					if (current == -1 || current == 0 || current == color)
-					{
-						continue;
-					}
-					
-					// Otherwise, check along that direction
-					while (!found)
-					{
-						posX += x;
-						posY += y;
-						current = board[posY][posX];
-						
-						// If the algorithm finds another piece of the same color along a direction
-						// end the loop to check a new direction, and set legal to true
-						if (current == color)
-						{
-							found = true;
-							legal = true;
-							
-						
-						}
-						// If the algorithm reaches an out of bounds area or an empty space
-						// end the loop to check a new direction, but do not set legal to true yet
-						else if (current == -1 || current == 0)
-						{
-							found = true;
-						}
-					}
-				}
-			}
-		}
-
-        return legal;
     }
     
     /**
@@ -315,7 +283,7 @@ public class OthelloModel {
      * board.
      * @param player the player to test the move for
      * @return {@code true} if the given player has a valid move they can do at all, anywhere on the 
-     * board, and false otherwise
+     * board, and {@code false} otherwise
      */
     public boolean moveTest(int player) {
         for(int row = 0; row < BOARD_SIZE; row++) {
@@ -340,7 +308,6 @@ public class OthelloModel {
                     chipCount++;
             }   
         }
-        System.out.println("Player" + player + " chip count: " + chipCount);
         return chipCount;
     }
     
