@@ -1182,7 +1182,6 @@ public class OthelloViewController extends FlowPane {
             }
         }
         
-       
         
         /**
          * Controls the position of the move cursor
