@@ -27,12 +27,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 /**
- * This class controls the UI 
+ * This contains the GUI
  */
 public class OthelloViewController extends FlowPane {
     
     private OthelloModel othelloModel;
-    private final int BOARD_SIZE = 8;
+    public static final int BOARD_SIZE = 8;
     
     private BorderPane[][] board = new BorderPane[BOARD_SIZE][BOARD_SIZE];
     private GridPane boardGridPane;
@@ -107,25 +107,32 @@ public class OthelloViewController extends FlowPane {
         submitButton.setPrefSize(96.0, 23.0);
         
         FlowPane consoleFlowPane = new FlowPane();
-        consoleFlowPane.setPrefHeight(23.0);
+        consoleFlowPane.setPrefHeight(83.0);
         consoleFlowPane.setPrefWidth(975.0 + 96.0);
         consoleFlowPane.setOrientation(Orientation.HORIZONTAL);
         consoleFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 0.0, 0.0, 0.0))));
         consoleFlowPane.getChildren().addAll(submitTextField, submitButton);
         
-        
-        this.setPrefHeight(750);
-        this.setPrefWidth(1075.0);
-        this.setStyle("-fx-background-color: rgb(220, 220, 220);");
-        this.setOrientation(Orientation.HORIZONTAL);
-        this.setRowValignment(VPos.CENTER);
-        this.setAlignment(Pos.TOP_LEFT);
-        this.setBorder(new Border(new BorderStroke(Color.GREY, 
+        FlowPane mainFlowPane = new FlowPane();
+        mainFlowPane.setPrefHeight(753);
+        mainFlowPane.setPrefWidth(1075.0);
+        mainFlowPane.setStyle("-fx-background-color: rgb(220, 220, 220);");
+        mainFlowPane.setOrientation(Orientation.HORIZONTAL);
+        mainFlowPane.setRowValignment(VPos.CENTER);
+        mainFlowPane.setAlignment(Pos.TOP_LEFT);
+        mainFlowPane.setBorder(new Border(new BorderStroke(Color.GREY, 
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5.0, 5.0, 5.0, 5.0))));
-        this.getChildren().addAll(setUpMenu(), setUpMainGridPane(), consoleFlowPane);
+        mainFlowPane.getChildren().addAll(setUpMainGridPane(), consoleFlowPane);
+        
+        this.setPrefHeight(783);
+        this.setPrefWidth(1075.0);
+        this.getChildren().addAll(setUpMenu(), mainFlowPane);
+        
         othelloModel = new OthelloModel();
+        
         new Controller();
+        
         
     }
     
@@ -657,6 +664,7 @@ public class OthelloViewController extends FlowPane {
         //Add all the menus to the menu bar
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(fileMenu, gameMenu, helpMenu);
+        menuBar.setVisible(true);
         
         return menuBar;
     }
@@ -725,11 +733,6 @@ public class OthelloViewController extends FlowPane {
      * @param newBoardState the new state of the board
      */
     public void updateBoardState(int[][] newBoardState) {
-//        for(int row = 0; row < BOARD_SIZE; row++) {
-//            System.out.println(Arrays.toString(newBoardState[row]));
-//        }
-//        System.out.println();
-//        System.out.println();
         
         //update the board state with the new state
         for(int row = 0; row < BOARD_SIZE; row++) {
@@ -827,7 +830,7 @@ public class OthelloViewController extends FlowPane {
     }
     
     /**
-     * Switches the functionality of the move button to skip or to move
+     * Switches the functionality of the move button between skip and move
      * 
      */
     public void switchMoveButton() {
@@ -836,8 +839,7 @@ public class OthelloViewController extends FlowPane {
         moveButton.setText(buttonText);
     }
     
-    
-    
+ 
     /**
      * A convenience method for checking if a square is on the board
      * @param row the row index of the square
@@ -862,21 +864,6 @@ public class OthelloViewController extends FlowPane {
          * Logs information when a button is pressed or when the tick box is checked/ unchecked
          */
         public void logActionsPerformed() {
-//           upButton.setOnAction((e) -> {
-//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
-//            });
-//            
-//            downButton.setOnAction((e) -> {
-//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
-//            });
-//            
-//            leftButton.setOnAction((e) -> {
-//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
-//            });
-//            
-//            rightButton.setOnAction((e) -> {
-//                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());
-//            });
             
             showValidMovesCheckBox.setOnAction((e) -> {
                 if(showValidMovesCheckBox.isSelected()) {
@@ -899,7 +886,6 @@ public class OthelloViewController extends FlowPane {
                 else {
                     attemptMove();
                 }
-                
                 System.out.println("An event was triggered on " + ((Node)e.getSource()).getId());  
             });
             
@@ -918,9 +904,13 @@ public class OthelloViewController extends FlowPane {
                     }
                 }
             }
-            int[][] validMovesArray =  new int [validMoves.size()][0];
+            int[][] validMovesArray =  new int [validMoves.size()][2];
             for(int i = 0; i < validMoves.size(); i++) {
                 validMovesArray[i] = validMoves.get(i);
+            }
+            
+            for(int row = 0; row < validMoves.size(); row++) {
+                System.out.println(Arrays.toString(validMoves.get(row)));
             }
             return validMovesArray;
         }
@@ -1000,9 +990,10 @@ public class OthelloViewController extends FlowPane {
         */
         public void startNewGame() {
             
-            resetCursor(); //reset the cursor
+            resetCursor(); //reset the position of the cursor
             initializeCursor(); //initialize the cursor
             currentPlayer = OthelloModel.BLACK; //set current player to black
+            moveButton.setText("Move");
             
             //set up the board layout according to the game mode selected
             switch(mode) {
@@ -1202,7 +1193,7 @@ public class OthelloViewController extends FlowPane {
                     updateCursorPosition(cursorPosition[0] - 1, cursorPosition[1]);
                     cursorPosition[0] -= 1;
                 }
-                
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
             });
             
             downButton.setOnAction((e) -> {
@@ -1210,6 +1201,7 @@ public class OthelloViewController extends FlowPane {
                     updateCursorPosition(cursorPosition[0] + 1, cursorPosition[1]);
                     cursorPosition[0] += 1;
                 }
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
             });
             
             leftButton.setOnAction((e) -> {
@@ -1217,7 +1209,7 @@ public class OthelloViewController extends FlowPane {
                     updateCursorPosition(cursorPosition[0], cursorPosition[1] - 1);
                     cursorPosition[1] -= 1;
                 }
-                
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
             });
             
             rightButton.setOnAction((e) -> {
@@ -1225,7 +1217,7 @@ public class OthelloViewController extends FlowPane {
                     updateCursorPosition(cursorPosition[0], cursorPosition[1] + 1);
                     cursorPosition[1] += 1;
                 }
-                
+                System.out.println("An event was triggered on " + ((Node)e.getSource()).getId()); 
             });
         }
         
@@ -1235,18 +1227,18 @@ public class OthelloViewController extends FlowPane {
          */
         private void attemptMove() {
             
-            int chipsCaptured = othelloModel.tryMove(cursorPosition[0], cursorPosition[1], currentPlayer);
-            if(chipsCaptured != 0) {
+            if(othelloModel.canMove(cursorPosition[0], cursorPosition[1], currentPlayer)) {
+                int chipsCaptured = othelloModel.tryMove(cursorPosition[0], cursorPosition[1], currentPlayer);
                 updateBoardState(othelloModel.getBoard());
                 updateScore(othelloModel.chipCount(OthelloModel.BLACK), OthelloModel.BLACK);
                 updateScore(othelloModel.chipCount(OthelloModel.WHITE), OthelloModel.WHITE);
                 logToGameChat("Player " + currentPlayer + " has captured " + chipsCaptured + " piece(s)");
                 currentPlayer = (currentPlayer == OthelloModel.BLACK) ? OthelloModel.WHITE :
                         OthelloModel.BLACK;
-//                showValidMoves(new int[0][0]);
-//                showValidMoves(getValidMoves());
-                
+                showValidMoves(new int[0][0]);
+                showValidMoves(getValidMoves());
             }
+         
             
             //if the game is over, declare the winner
             if(isGameOver()) {
@@ -1254,19 +1246,16 @@ public class OthelloViewController extends FlowPane {
                 declareWinner();
                 logToGameChat("");
                 logToGameChat("Select New Game to Play Again.");
+                return;
             }
             
             //if the current player has no valid moves, skip their turn
             if(!othelloModel.moveTest(currentPlayer)) {
-                logToGameChat("Player " + currentPlayer + " has no valid moves."
+                logToGameChat("Player " + currentPlayer + " has no valid moves. "
                         + "Press skip.");
-                skipTurn();
+                switchMoveButton();
             }
             
-//            //if any of the players no longer has any valid moves, declare the winner
-//            if(!othelloModel.moveTest(OthelloModel.BLACK) || !othelloModel.moveTest(OthelloModel.WHITE)) {
-//                declareWinner();
-//            }
         }
         
         /**

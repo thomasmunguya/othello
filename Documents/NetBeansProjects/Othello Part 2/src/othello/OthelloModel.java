@@ -1,7 +1,9 @@
 
 package othello;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class OthelloModel {
@@ -18,15 +20,9 @@ public class OthelloModel {
     
     public static final int BLACK=1;
     public static final int WHITE=2;
-    
-    private final int BOARD_SIZE = 8;
+   
     private int[][] board;
-    
-    private int lastRowDelta = 0;
-    private int lastColDelta = 0;
-    private int lastX = 0;
-    private int lastY = 0;
-    
+  
     //a variable to keep track of the opposing player for the current player
     private int opponent = 0;
     
@@ -167,47 +163,53 @@ public class OthelloModel {
      */
     public boolean canMove(int row, int col, int player) {
         
-        int rowdelta = 0;     /* Row increment around a square    */
-        int coldelta = 0;     /* Column increment around a square */
-        int x = 0;            /* Row index when searching         */
-        int y = 0;            /* Column index when searching      */
+        int rowdelta = 0;     // Row increment around a square    
+        int coldelta = 0;     // Column increment around a square
+        int x = 0;            // Row index when searching         
+        int y = 0;            // Column index when searching     
   
-        /* Set the opponent            */
-        opponent = (player == 1)? 2 : 1; 
-        /* Check all the squares around the blank square  */ 
-        /* for the opponents counter                      */
+        // Set the opponent           
+        opponent = (player == BLACK) ? WHITE : BLACK;
+        
+        // Check all the squares around the blank square   
+        // for the opponents counter                      
         for(rowdelta = -1; rowdelta <= 1; rowdelta++)
             for(coldelta = -1; coldelta <= 1; coldelta++) { 
-            /* Don't check outside the array, or the current square */
-            if(row + rowdelta < 0 || row + rowdelta >= BOARD_SIZE ||
-                col + coldelta < 0 || col + coldelta >= BOARD_SIZE || 
+            // Don't check outside the array, or the current square 
+            if(row + rowdelta < 0 || row + rowdelta >= OthelloViewController.BOARD_SIZE ||
+                col + coldelta < 0 || col + coldelta >= OthelloViewController.BOARD_SIZE || 
                                        (rowdelta==0 && coldelta==0)) continue;
-           /* Now check the square */
+           // Now check the square
            if(board[row + rowdelta][col + coldelta] == opponent) {
-                /* If we find the opponent, move in the delta direction  */
-                /* over opponent pieces searching for a player piece */
-                x = row + rowdelta;                /* Move to          */
-                y = col + coldelta;                /* opponent square  */
+                //If we find the opponent, move in the delta direction  
+                //over opponent pieces searching for a player piece 
+                x = row + rowdelta;                // Move to          
+                y = col + coldelta;                // opponent square  
 
-                /* Look for a player square in the delta direction */
+                //Look for a player square in the delta direction
                 while(true){
-                    x += rowdelta;                  /* Go to next square */
-                    y += coldelta;                  /* in delta direction*/
+                    x += rowdelta;                  // Go to next square 
+                    y += coldelta;                  // in delta direction
 
-                    /* If we move outside the array, give up */
-                    if(x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE) {
+                    //If we move outside the array, give up
+                    if(x < 0 || x >= OthelloViewController.BOARD_SIZE || y < 0 || y >= OthelloViewController.BOARD_SIZE) {
                         break;
                     }
                      
-                    /* If we find a blank square, give up */ 
+                    // If we find a blank square, give up
                     if(board[x][y] == 0) {
                         break;
                     }
                     
-                    /*  If the square has a player counter */
-                    /*  then we have a valid move          */
+                    //If the square has a player piece
+                    //then we have a valid move
                     if(board[x][y] == player){
-                        return true;
+                        while(true) {
+                            if((board[x -= rowdelta][y -= coldelta] == opponent)) {
+                                return true;
+                            }
+                        }
+                        
                     }
                 } 
            } 
@@ -232,8 +234,8 @@ public class OthelloModel {
         int x = 0; // Row index for searching
         int y = 0; // Column index for searching
         
-        // Identify opponent
-        opponent = (player == BLACK) ? WHITE : BLACK;
+        
+        opponent = (player == BLACK) ? WHITE : BLACK; // Identify opponent
         board[row][col] = player; // Place the player piece
         
         // Check all squares around this square for opponents piece
@@ -242,8 +244,8 @@ public class OthelloModel {
             for(coldelta = -1; coldelta <= 1; ++coldelta) {
                 
                 // Don't check off the board, or the current square
-                if((row == 0 && rowDelta == -1) || row + rowDelta >= BOARD_SIZE ||
-                    (col == 0 && coldelta == -1) || col + coldelta >= BOARD_SIZE ||
+                if((row == 0 && rowDelta == -1) || row + rowDelta >= OthelloViewController.BOARD_SIZE ||
+                    (col == 0 && coldelta == -1) || col + coldelta >= OthelloViewController.BOARD_SIZE ||
                     (rowDelta == 0 && coldelta == 0)) {
                     continue;
                 }
@@ -259,11 +261,11 @@ public class OthelloModel {
                         x += rowDelta; // Move to the
                         y += coldelta; // next square
                     
-                        if(x >= BOARD_SIZE || y >= BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
+                        if(x >= OthelloViewController.BOARD_SIZE || y >= OthelloViewController.BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
                             break; // ...give up
                     
                         // If we find the player piece, go backward from here
-                        // changing all the opponents counters to player
+                        // changing all the opponents pieces to player
                         if(board[x][y] == player) {
                             while(board[x -= rowDelta][y -= coldelta] == opponent) {
                                 board[x][y] = player; // If its an opponent piece change it
@@ -286,8 +288,8 @@ public class OthelloModel {
      * board, and {@code false} otherwise
      */
     public boolean moveTest(int player) {
-        for(int row = 0; row < BOARD_SIZE; row++) {
-            for(int col = 0; col < BOARD_SIZE; col++) {
+        for(int row = 0; row < OthelloViewController.BOARD_SIZE; row++) {
+            for(int col = 0; col < OthelloViewController.BOARD_SIZE; col++) {
                 if(canMove(row, col, player)) 
                     return true;
             }   
@@ -302,14 +304,13 @@ public class OthelloModel {
      */
     public int chipCount(int player) {
         int chipCount = 0;
-        for(int row = 0; row < BOARD_SIZE; row++) {
-            for(int col = 0; col < BOARD_SIZE; col++) {
+        for(int row = 0; row < OthelloViewController.BOARD_SIZE; row++) {
+            for(int col = 0; col < OthelloViewController.BOARD_SIZE; col++) {
                 if(board[row][col] == player)
                     chipCount++;
             }   
         }
         return chipCount;
     }
-    
    
 }

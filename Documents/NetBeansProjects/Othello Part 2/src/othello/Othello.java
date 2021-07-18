@@ -27,7 +27,7 @@ public class Othello extends Application {
                 }
                 OthelloViewController othelloViewController = new OthelloViewController();
         
-                Scene scene = new Scene(othelloViewController, 1082, 712);
+                Scene scene = new Scene(othelloViewController, 1082, 733);
                 
                 splashScreen.close();
                 
