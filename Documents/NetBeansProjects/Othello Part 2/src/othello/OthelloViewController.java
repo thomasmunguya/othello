@@ -899,7 +899,7 @@ public class OthelloViewController extends FlowPane {
             List<int[]> validMoves = new ArrayList<>();
             for(int row = 0; row < BOARD_SIZE; row++) {
                 for(int col = 0; col < BOARD_SIZE; col++) {
-                    if(othelloModel.canMove(row, col, currentPlayer)) {
+                    if(othelloModel.isValidMove(new Coord(row, col), currentPlayer)) {
                         validMoves.add(new int[]{row, col});
                     }
                 }
@@ -1226,16 +1226,19 @@ public class OthelloViewController extends FlowPane {
          */
         private void attemptMove() {
             
-            if(othelloModel.canMove(cursorPosition[0], cursorPosition[1], currentPlayer)) {
-                int chipsCaptured = othelloModel.tryMove(cursorPosition[0], cursorPosition[1], currentPlayer);
+            if(othelloModel.isValidMove(new Coord(cursorPosition[0], cursorPosition[1]), currentPlayer)) {
+                int chipsCaptured = othelloModel.tryMove(new Coord(cursorPosition[0], cursorPosition[1]), currentPlayer);
                 updateBoardState(othelloModel.getBoard());
                 updateScore(othelloModel.chipCount(OthelloModel.BLACK), OthelloModel.BLACK);
                 updateScore(othelloModel.chipCount(OthelloModel.WHITE), OthelloModel.WHITE);
                 logToGameChat("Player " + currentPlayer + " has captured " + chipsCaptured + " piece(s)");
                 currentPlayer = (currentPlayer == OthelloModel.BLACK) ? OthelloModel.WHITE :
                         OthelloModel.BLACK;
-                showValidMoves(new int[0][0]);
-                showValidMoves(getValidMoves());
+                if(showValidMovesCheckBox.isSelected()) {
+                    showValidMoves(new int[0][0]);
+                    showValidMoves(getValidMoves());
+                }
+                
             }
          
             

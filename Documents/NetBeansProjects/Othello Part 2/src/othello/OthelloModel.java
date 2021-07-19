@@ -22,6 +22,17 @@ public class OthelloModel {
     public static final int WHITE=2;
    
     private int[][] board;
+    
+    public final Coord dirUp = new Coord (0 , -1) ;
+    public final Coord dirDown = new Coord ( 0 , 1 ) ;
+    public final Coord dirLeft = new Coord ( -1 ,0) ;
+    public final Coord dirRight = new Coord ( 1 , 0 ) ;
+    public final Coord dirUpLeft = new Coord(-1 ,-1);
+    public final Coord dirUpRight = new Coord (1 , -1) ;
+    public final Coord dirDownLeft = new Coord (-1 ,1) ;
+    public final Coord dirDownRight = new Coord ( 1 , 1 ) ;
+    final Coord arrDirections [] = { dirUp , dirDown , dirLeft , dirRight , dirUpLeft , dirUpRight ,
+dirDownLeft , dirDownRight };
   
     //a variable to keep track of the opposing player for the current player
     private int opponent = 0;
@@ -36,6 +47,9 @@ public class OthelloModel {
      * @return the board clone
      */
     public int[][] getBoard() {
+        for(int row = 0; row < OthelloViewController.BOARD_SIZE; row++) {
+            System.out.println(Arrays.toString(board[row]));
+        }
         return board.clone();
     }
     
@@ -217,6 +231,62 @@ public class OthelloModel {
        return false;
     }
     
+    public boolean isValidMove(Coord move, int player) {
+        boolean result = false;
+        int enemy = (player == BLACK) ? WHITE: BLACK;
+        
+        int x = move.getX();
+        int y = move.getY();
+        
+        //Check if the field is blank
+        if(board[x][y] != 0) {
+            return false;
+        }
+        else {
+            //Okay so the field is blank
+            //Let's get the directions
+            for(int i = 0; i < arrDirections.length; i++) {
+                //The direction is stored for use...
+                Coord coordDirection = arrDirections[i];
+                //Getting direction
+                int xDir = coordDirection.getX();
+                int yDir = coordDirection.getY();
+                int jump = 2;
+                
+                //Check in every direction, if there's an enemy
+                if((y + yDir) > -1 
+                     && (y + yDir) < 8 
+                     && (x + xDir) < 8
+                     && (x + xDir) > -1) {
+                    if(board[x + xDir][y + yDir] == enemy) {
+                        //Search while inside the board frame
+                        while((y + (jump * yDir)) > -1 
+                        && (y + (jump * yDir)) < 8 
+                        && (x + (jump * xDir)) < 8 
+                        && (x + (jump * xDir)) > -1) {
+                            //looking for a friend
+                            //Empty space is no good
+                            if(board[x + (jump * xDir)][y + (jump * yDir)] == 0) {
+                                break;
+                            }
+                            //found a friend, it's a legal move
+                            if(board[x + (jump * xDir)][y + (jump * yDir)] == player) {
+                                return true;
+                            }   
+                            jump++;
+                        }
+                        
+                    }
+                }
+               
+                
+           }
+        }
+        return result;
+    }
+
+
+ 
     
     /**
      * Attempts to make a move and updates the state of the board model if the move is legal
@@ -226,58 +296,111 @@ public class OthelloModel {
      * @return the number of chips captured; or 0 if the move is illegal,
      * flipping all appropriate chips to the new colour
      */
-    public int tryMove(int row, int col, int player) {
+//    public int tryMove(int row, int col, int player) {
+//        
+//        int chipsCaptured = 0;
+//        int rowDelta = 0; // Row increment
+//        int coldelta = 0; // Column increment
+//        int x = 0; // Row index for searching
+//        int y = 0; // Column index for searching
+//        
+//        
+//        opponent = (player == BLACK) ? WHITE : BLACK; // Identify opponent
+//        board[row][col] = player; // Place the player piece
+//        
+//        // Check all squares around this square for opponents piece
+//        for(rowDelta = -1 ; rowDelta <= 1 ; ++rowDelta) {
+//            
+//            for(coldelta = -1; coldelta <= 1; ++coldelta) {
+//                
+//                // Don't check off the board, or the current square
+//                if((row == 0 && rowDelta == -1) || row + rowDelta >= OthelloViewController.BOARD_SIZE ||
+//                    (col == 0 && coldelta == -1) || col + coldelta >= OthelloViewController.BOARD_SIZE ||
+//                    (rowDelta == 0 && coldelta == 0)) {
+//                    continue;
+//                }
+//                
+//                // Now check the square
+//                if(board[row + rowDelta][col + coldelta] == opponent) { 
+//                    // Found opponent so search in same direction for player piece
+//                    x = row + rowDelta; // Move to opponent
+//                    y = col + coldelta; // square
+//                
+//                    while(true) {
+//                    
+//                        x += rowDelta; // Move to the
+//                        y += coldelta; // next square
+//                    
+//                        if(x >= OthelloViewController.BOARD_SIZE || y >= OthelloViewController.BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
+//                            break; // ...give up
+//                    
+//                        // If we find the player piece, go backward from here
+//                        // changing all the opponents pieces to player
+//                        if(board[x][y] == player) {
+//                            while(board[x -= rowDelta][y -= coldelta] == opponent) {
+//                                board[x][y] = player; // If its an opponent piece change it
+//                                chipsCaptured++; //increment the number of chips captured
+//                            } 
+//                            break; // We are done
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return chipsCaptured;
+//    }
+    
+    public int tryMove(Coord move, int player) {
+        int piecesCaptured = 0;
+        int enemy = (player == BLACK) ? WHITE: BLACK;
         
-        int chipsCaptured = 0;
-        int rowDelta = 0; // Row increment
-        int coldelta = 0; // Column increment
-        int x = 0; // Row index for searching
-        int y = 0; // Column index for searching
+        int x = move.getX();
+        int y = move.getY();
         
-        
-        opponent = (player == BLACK) ? WHITE : BLACK; // Identify opponent
-        board[row][col] = player; // Place the player piece
-        
-        // Check all squares around this square for opponents piece
-        for(rowDelta = -1 ; rowDelta <= 1 ; ++rowDelta) {
+        for(int i = 0; i < arrDirections.length; i++) {
+            Coord coordDirection = arrDirections[i];
+            int xDir = coordDirection.getX();
+            int yDir = coordDirection.getY();
+            boolean potential = false;
             
-            for(coldelta = -1; coldelta <= 1; ++coldelta) {
-                
-                // Don't check off the board, or the current square
-                if((row == 0 && rowDelta == -1) || row + rowDelta >= OthelloViewController.BOARD_SIZE ||
-                    (col == 0 && coldelta == -1) || col + coldelta >= OthelloViewController.BOARD_SIZE ||
-                    (rowDelta == 0 && coldelta == 0)) {
-                    continue;
+            //if we are inside the board
+            if((y + yDir) > -1 
+                && (y + yDir) < 8 
+                && (x + xDir) < 8
+                && (x + xDir) > -1) {
+                //if we have an enemy next to us in the direction we are going
+                if(board[x + xDir][y + yDir] == enemy) {
+                    //then the direction has potential
+                    potential = true;
                 }
-                
-                // Now check the square
-                if(board[row + rowDelta][col + coldelta] == opponent) { 
-                    // Found opponent so search in same direction for player piece
-                    x = row + rowDelta; // Move to opponent
-                    y = col + coldelta; // square
-                
-                    while(true) {
+            }
+            if(potential) {
+                int jump = 2;
+                while((y + (jump * yDir)) > -1 
+                    && (y + (jump * yDir)) < OthelloViewController.BOARD_SIZE 
+                    && (x + (jump * xDir)) < OthelloViewController.BOARD_SIZE 
+                    && (x + (jump * xDir)) > -1) {
                     
-                        x += rowDelta; // Move to the
-                        y += coldelta; // next square
-                    
-                        if(x >= OthelloViewController.BOARD_SIZE || y >= OthelloViewController.BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
-                            break; // ...give up
-                    
-                        // If we find the player piece, go backward from here
-                        // changing all the opponents pieces to player
-                        if(board[x][y] == player) {
-                            while(board[x -= rowDelta][y -= coldelta] == opponent) {
-                                board[x][y] = player; // If its an opponent piece change it
-                                chipsCaptured++; //increment the number of chips captured
-                            } 
-                            break; // We are done
+                    //lets see if I can find a friend
+                     if(board[x + (jump * xDir)][y + (jump * yDir)] == 0) {
+                        break;
+                     }
+                     //found a friend, it's a legal move
+                     if(board[x + (jump * xDir)][y + (jump * yDir)] == player) {
+                           //Great! We found a mate, everything between (X, Y) and
+                           //(x + jump * xDir, y + jump * yDir) is ours!
+                           //K = 1 since 0 is our own button
+                        for(int k = 0; k < jump; k++) {
+                            board[x + (k * xDir)][y + (k * yDir)] = player;
+                            piecesCaptured++;
                         }
-                    }
+                        break;
+                     }
+                    jump++;
                 }
             }
         }
-        return chipsCaptured;
+        return piecesCaptured;
     }
     
     /**
@@ -313,4 +436,33 @@ public class OthelloModel {
         return chipCount;
     }
    
+}
+
+class Coord {
+    
+    private int x;
+    private int y;
+    
+    public Coord(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+    
+    
 }
