@@ -259,8 +259,8 @@ public class OthelloModel {
                            //K = 1 since 0 is our own button
                         for(int k = 0; k < jump; k++) {
                             board[x + (k * xDir)][y + (k * yDir)] = player;
-                            piecesCaptured++;
                         }
+                        piecesCaptured++;
                         break;
                      }
                     jump++;

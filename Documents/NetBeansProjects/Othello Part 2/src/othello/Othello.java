@@ -33,7 +33,7 @@ public class Othello extends Application {
                 
                 primaryStage.setTitle("Arzaan's Othello Client");
                 primaryStage.setScene(scene);
-                primaryStage.setResizable(true);
+                primaryStage.setResizable(false);
                 primaryStage.show();
             }
         });

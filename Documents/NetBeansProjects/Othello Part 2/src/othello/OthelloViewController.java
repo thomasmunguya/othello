@@ -693,7 +693,7 @@ public class OthelloViewController extends FlowPane {
         Alert aboutDialogBox = new Alert(Alert.AlertType.INFORMATION);
         aboutDialogBox.setTitle("About");
         aboutDialogBox.setHeaderText("About");
-        aboutDialogBox.setContentText("Othello Game\nby Arzaan Irani\n\nJuly 2021"); //TODO: Change this to client's name
+        aboutDialogBox.setContentText("Othello Game\nby Arzaan Irani\n\nJuly 2021");
         aboutDialogBox.show();
     }
     
