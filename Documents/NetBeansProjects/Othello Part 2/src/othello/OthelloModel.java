@@ -1,11 +1,6 @@
 
 package othello;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
 public class OthelloModel {
     
     public static final int NORMAL=0;
@@ -23,19 +18,10 @@ public class OthelloModel {
    
     private int[][] board;
     
-    public final Coord dirUp = new Coord (0 , -1) ;
-    public final Coord dirDown = new Coord ( 0 , 1 ) ;
-    public final Coord dirLeft = new Coord ( -1 ,0) ;
-    public final Coord dirRight = new Coord ( 1 , 0 ) ;
-    public final Coord dirUpLeft = new Coord(-1 ,-1);
-    public final Coord dirUpRight = new Coord (1 , -1) ;
-    public final Coord dirDownLeft = new Coord (-1 ,1) ;
-    public final Coord dirDownRight = new Coord ( 1 , 1 ) ;
-    final Coord arrDirections [] = { dirUp , dirDown , dirLeft , dirRight , dirUpLeft , dirUpRight ,
-dirDownLeft , dirDownRight };
-  
-    //a variable to keep track of the opposing player for the current player
-    private int opponent = 0;
+    //An array of the directions to traverse in search for a valid move
+    private final int arrDirections[][] = { 
+        {0 , -1} , {0 , 1}, {-1 ,0} , {1 , 0} ,
+        {-1 ,-1} , {1 , -1} ,{-1 ,1}, {1 , 1}};
     
     public OthelloModel() {
         prepareBoard(NORMAL);
@@ -47,9 +33,6 @@ dirDownLeft , dirDownRight };
      * @return the board clone
      */
     public int[][] getBoard() {
-        for(int row = 0; row < OthelloViewController.BOARD_SIZE; row++) {
-            System.out.println(Arrays.toString(board[row]));
-        }
         return board.clone();
     }
     
@@ -78,94 +61,96 @@ dirDownLeft , dirDownRight };
                     {0, 0, 0, 0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 1, 0, 0, 0, 0, 1, 0},
-                                {2, 0, 0, 0, 0, 0, 0, 2}};
-                                break;
+                    {0, 1, 0, 0, 0, 0, 1, 0},
+                    {2, 0, 0, 0, 0, 0, 0, 2}};
+                    break;
                 
 		case OUTER_TEST:
-			board = new int[][] {
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 2, 2, 2, 2, 2, 2, 0},
-				{0, 2, 1, 1, 1, 1, 2, 0},
-				{0, 2, 1, 0, 0, 1, 2, 0},
-				{0, 2, 1, 0, 0, 1, 2, 0},
-				{0, 2, 1, 1, 1, 1, 2, 0},
-				{0, 2, 2, 2, 2, 2, 2, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0}};
-			break;
+                    board = new int[][] {
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 2, 2, 2, 2, 2, 2, 0},
+                    {0, 2, 1, 1, 1, 1, 2, 0},
+                    {0, 2, 1, 0, 0, 1, 2, 0},
+                    {0, 2, 1, 0, 0, 1, 2, 0},
+                    {0, 2, 1, 1, 1, 1, 2, 0},
+                    {0, 2, 2, 2, 2, 2, 2, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0}};
+                    break;
                 
 		case INNER_TEST:
-			board = new int[][] {
-				{2, 2, 2, 2, 2, 2, 2, 2},
-				{2, 0, 0, 0, 0, 0, 0, 2},
-				{2, 0, 2, 2, 2, 2, 0, 2},
-				{2, 0, 2, 1, 1, 2, 0, 2},
-				{2, 0, 2, 1, 1, 2, 0, 2},
-				{2, 0, 2, 2, 2, 2, 0, 2},
-				{2, 0, 0, 0, 0, 0, 0, 2},
-				{2, 2, 2, 2, 2, 2, 2, 2}};
+                    board = new int[][] {
+                    {2, 2, 2, 2, 2, 2, 2, 2},
+                    {2, 0, 0, 0, 0, 0, 0, 2},
+                    {2, 0, 2, 2, 2, 2, 0, 2},
+                    {2, 0, 2, 1, 1, 2, 0, 2},
+                    {2, 0, 2, 1, 1, 2, 0, 2},
+                    {2, 0, 2, 2, 2, 2, 0, 2},
+                    {2, 0, 0, 0, 0, 0, 0, 2},
+                    {2, 2, 2, 2, 2, 2, 2, 2}};
 			break;
                 
 		case UNWINNABLE:
-			board = new int[][] {
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0}};
+                    board = new int[][] {
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0}};
 			break;
                 
 		case TEST_CAPTURE:
-			board  = new int[][]{
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 1, 1, 1, 1, 1, 1, 0},
-				{0, 1, 1, 1, 1, 1, 1, 0},
-				{0, 1, 2, 2, 2, 1, 1, 0},
-				{0, 1, 2, 0, 2, 1, 1, 0},
-				{0, 1, 2, 2, 2, 1, 1, 0},
-				{0, 1, 1, 1, 1, 1, 1, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0}};
-				break;
+                    board  = new int[][]{
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 1, 1, 1, 1, 1, 1, 0},
+                    {0, 1, 1, 1, 1, 1, 1, 0},
+                    {0, 1, 2, 2, 2, 1, 1, 0},
+                    {0, 1, 2, 0, 2, 1, 1, 0},
+                    {0, 1, 2, 2, 2, 1, 1, 0},
+                    {0, 1, 1, 1, 1, 1, 1, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0}};
+                    break;
 				
 		case TEST_CAPTURE2:
-			board = new int[][]{
-				{1, 1, 1, 1, 1, 1, 1, 1},
-				{1, 1, 1, 1, 1, 1, 1, 1},
-				{1, 2, 2, 2, 1, 2, 1, 1},
-				{1, 2, 2, 2, 2, 2, 1, 1},
-				{1, 2, 2, 0, 2, 2, 1, 1},
-				{1, 2, 2, 2, 2, 1, 1, 1},
-				{1, 2, 1, 2, 2, 2, 1, 1},
-				{1, 1, 1, 1, 1, 1, 1, 1}};
-				break;
+                    board = new int[][]{
+                    {1, 1, 1, 1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1, 1, 1, 1},
+                    {1, 2, 2, 2, 1, 2, 1, 1},
+                    {1, 2, 2, 2, 2, 2, 1, 1},
+                    {1, 2, 2, 0, 2, 2, 1, 1},
+                    {1, 2, 2, 2, 2, 1, 1, 1},
+                    {1, 2, 1, 2, 2, 2, 1, 1},
+                    {1, 1, 1, 1, 1, 1, 1, 1}};
+                    break;
                 
                 case ARROW:
-                        board = new int[][]{
-                                {0, 0, 0, 1, 1, 0, 0, 0},
-                                {0, 0, 1, 1, 1, 1, 0, 0},
-                                {0, 1, 0, 1, 1, 0, 1, 0},
-                                {1, 0, 0, 1, 1, 0, 0, 1},
-                                {0, 0, 0, 1, 1, 0, 0, 0},
-                                {0, 0, 0, 1, 1, 0, 0, 0},
-                                {0, 0, 0, 1, 1, 0, 0, 0},
-                                {0, 0, 0, 1, 1, 0, 0, 0}};
-                break;
+                    board = new int[][]{
+                    {0, 0, 0, 1, 1, 0, 0, 0},
+                    {0, 0, 1, 1, 1, 1, 0, 0},
+                    {0, 1, 0, 1, 1, 0, 1, 0},
+                    {1, 0, 0, 1, 1, 0, 0, 1},
+                    {0, 0, 0, 1, 1, 0, 0, 0},
+                    {0, 0, 0, 1, 1, 0, 0, 0},
+                    {0, 0, 0, 1, 1, 0, 0, 0},
+                    {0, 0, 0, 1, 1, 0, 0, 0}};
+                    break;
                 
 		default:
-			board = new int[][]{
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 2, 1, 0, 0, 0},
-				{0, 0, 0, 1, 2, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0}};
+                    board = new int[][]{
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 2, 1, 0, 0, 0},
+                    {0, 0, 0, 1, 2, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0, 0}};
 		}	
     }
+    
+    
     
     /**
      * checks if a player (1 for black, 2 for white) may make a valid move
@@ -177,99 +162,44 @@ dirDownLeft , dirDownRight };
      */
     public boolean canMove(int row, int col, int player) {
         
-        int rowdelta = 0;     // Row increment around a square    
-        int coldelta = 0;     // Column increment around a square
-        int x = 0;            // Row index when searching         
-        int y = 0;            // Column index when searching     
-  
-        // Set the opponent           
-        opponent = (player == BLACK) ? WHITE : BLACK;
+        int opponent = (player == BLACK) ? WHITE: BLACK;
         
-        // Check all the squares around the blank square   
-        // for the opponents counter                      
-        for(rowdelta = -1; rowdelta <= 1; rowdelta++)
-            for(coldelta = -1; coldelta <= 1; coldelta++) { 
-            // Don't check outside the array, or the current square 
-            if(row + rowdelta < 0 || row + rowdelta >= OthelloViewController.BOARD_SIZE ||
-                col + coldelta < 0 || col + coldelta >= OthelloViewController.BOARD_SIZE || 
-                                       (rowdelta==0 && coldelta==0)) continue;
-           // Now check the square
-           if(board[row + rowdelta][col + coldelta] == opponent) {
-                //If we find the opponent, move in the delta direction  
-                //over opponent pieces searching for a player piece 
-                x = row + rowdelta;                // Move to          
-                y = col + coldelta;                // opponent square  
-
-                //Look for a player square in the delta direction
-                while(true){
-                    x += rowdelta;                  // Go to next square 
-                    y += coldelta;                  // in delta direction
-
-                    //If we move outside the array, give up
-                    if(x < 0 || x >= OthelloViewController.BOARD_SIZE || y < 0 || y >= OthelloViewController.BOARD_SIZE) {
-                        break;
-                    }
-                     
-                    // If we find a blank square, give up
-                    if(board[x][y] == 0) {
-                        break;
-                    }
-                    
-                    //If the square has a player piece
-                    //then we have a valid move
-                    if(board[x][y] == player){
-                        while(true) {
-                            if((board[x -= rowdelta][y -= coldelta] == opponent)) {
-                                return true;
-                            }
-                        }
-                        
-                    }
-                } 
-           } 
-         }  
-       return false;
-    }
-    
-    public boolean isValidMove(Coord move, int player) {
-        boolean result = false;
-        int enemy = (player == BLACK) ? WHITE: BLACK;
-        
-        int x = move.getX();
-        int y = move.getY();
+        int x = row;
+        int y = col;
         
         //Check if the field is blank
         if(board[x][y] != 0) {
             return false;
         }
         else {
-            //Okay so the field is blank
-            //Let's get the directions
+            //If the field is blank
+            //get the directions
             for(int i = 0; i < arrDirections.length; i++) {
                 //The direction is stored for use...
-                Coord coordDirection = arrDirections[i];
+                int[] direction = arrDirections[i];
                 //Getting direction
-                int xDir = coordDirection.getX();
-                int yDir = coordDirection.getY();
+                int xDir = direction[0];
+                int yDir = direction[1];
                 int jump = 2;
                 
-                //Check in every direction, if there's an enemy
+                //Check in every direction, if there's an opponent
                 if((y + yDir) > -1 
                      && (y + yDir) < 8 
                      && (x + xDir) < 8
                      && (x + xDir) > -1) {
-                    if(board[x + xDir][y + yDir] == enemy) {
+                    //if an opponent is found
+                    if(board[x + xDir][y + yDir] == opponent) {
                         //Search while inside the board frame
                         while((y + (jump * yDir)) > -1 
                         && (y + (jump * yDir)) < 8 
                         && (x + (jump * xDir)) < 8 
                         && (x + (jump * xDir)) > -1) {
-                            //looking for a friend
-                            //Empty space is no good
+                            //looking for a piece of the current player
+                            //If an empty space is found, stop
                             if(board[x + (jump * xDir)][y + (jump * yDir)] == 0) {
                                 break;
                             }
-                            //found a friend, it's a legal move
+                            //If a piece of the current player is found its a valid move
                             if(board[x + (jump * xDir)][y + (jump * yDir)] == player) {
                                 return true;
                             }   
@@ -282,93 +212,30 @@ dirDownLeft , dirDownRight };
                 
            }
         }
-        return result;
+        return false;
     }
-
-
- 
     
-    /**
-     * Attempts to make a move and updates the state of the board model if the move is legal
-     * @param row the row index at which to attempt the move
-     * @param col the col index at which to attempt the move
-     * @param player the player
-     * @return the number of chips captured; or 0 if the move is illegal,
-     * flipping all appropriate chips to the new colour
-     */
-//    public int tryMove(int row, int col, int player) {
-//        
-//        int chipsCaptured = 0;
-//        int rowDelta = 0; // Row increment
-//        int coldelta = 0; // Column increment
-//        int x = 0; // Row index for searching
-//        int y = 0; // Column index for searching
-//        
-//        
-//        opponent = (player == BLACK) ? WHITE : BLACK; // Identify opponent
-//        board[row][col] = player; // Place the player piece
-//        
-//        // Check all squares around this square for opponents piece
-//        for(rowDelta = -1 ; rowDelta <= 1 ; ++rowDelta) {
-//            
-//            for(coldelta = -1; coldelta <= 1; ++coldelta) {
-//                
-//                // Don't check off the board, or the current square
-//                if((row == 0 && rowDelta == -1) || row + rowDelta >= OthelloViewController.BOARD_SIZE ||
-//                    (col == 0 && coldelta == -1) || col + coldelta >= OthelloViewController.BOARD_SIZE ||
-//                    (rowDelta == 0 && coldelta == 0)) {
-//                    continue;
-//                }
-//                
-//                // Now check the square
-//                if(board[row + rowDelta][col + coldelta] == opponent) { 
-//                    // Found opponent so search in same direction for player piece
-//                    x = row + rowDelta; // Move to opponent
-//                    y = col + coldelta; // square
-//                
-//                    while(true) {
-//                    
-//                        x += rowDelta; // Move to the
-//                        y += coldelta; // next square
-//                    
-//                        if(x >= OthelloViewController.BOARD_SIZE || y >= OthelloViewController.BOARD_SIZE || board[x][y] == EMPTY)// If blank square or off board...
-//                            break; // ...give up
-//                    
-//                        // If we find the player piece, go backward from here
-//                        // changing all the opponents pieces to player
-//                        if(board[x][y] == player) {
-//                            while(board[x -= rowDelta][y -= coldelta] == opponent) {
-//                                board[x][y] = player; // If its an opponent piece change it
-//                                chipsCaptured++; //increment the number of chips captured
-//                            } 
-//                            break; // We are done
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return chipsCaptured;
-//    }
     
-    public int tryMove(Coord move, int player) {
+    public int tryMove(int row, int col, int player) {
+        
         int piecesCaptured = 0;
         int enemy = (player == BLACK) ? WHITE: BLACK;
         
-        int x = move.getX();
-        int y = move.getY();
+        int x = row;
+        int y = col;
         
         for(int i = 0; i < arrDirections.length; i++) {
-            Coord coordDirection = arrDirections[i];
-            int xDir = coordDirection.getX();
-            int yDir = coordDirection.getY();
+            int[] direction = arrDirections[i];
+            int xDir = direction[0];
+            int yDir = direction[1];
             boolean potential = false;
             
-            //if we are inside the board
+            //if inside the board
             if((y + yDir) > -1 
                 && (y + yDir) < 8 
                 && (x + xDir) < 8
                 && (x + xDir) > -1) {
-                //if we have an enemy next to us in the direction we are going
+                //if an opponent is next to the current player's piece in the direction we are headed
                 if(board[x + xDir][y + yDir] == enemy) {
                     //then the direction has potential
                     potential = true;
@@ -381,14 +248,14 @@ dirDownLeft , dirDownRight };
                     && (x + (jump * xDir)) < OthelloViewController.BOARD_SIZE 
                     && (x + (jump * xDir)) > -1) {
                     
-                    //lets see if I can find a friend
+                    //Search for a piece of the current player
                      if(board[x + (jump * xDir)][y + (jump * yDir)] == 0) {
                         break;
                      }
-                     //found a friend, it's a legal move
+                     //found a piece? It's a legal move
                      if(board[x + (jump * xDir)][y + (jump * yDir)] == player) {
-                           //Great! We found a mate, everything between (X, Y) and
-                           //(x + jump * xDir, y + jump * yDir) is ours!
+                           //A piece is found, everything between (X, Y) and
+                           //(x + jump * xDir, y + jump * yDir) belongs to the current player!
                            //K = 1 since 0 is our own button
                         for(int k = 0; k < jump; k++) {
                             board[x + (k * xDir)][y + (k * yDir)] = player;
@@ -437,32 +304,4 @@ dirDownLeft , dirDownRight };
     }
    
 }
-
-class Coord {
-    
-    private int x;
-    private int y;
-    
-    public Coord(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-    
-    
-}
+   

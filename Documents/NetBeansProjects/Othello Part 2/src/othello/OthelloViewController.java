@@ -899,7 +899,7 @@ public class OthelloViewController extends FlowPane {
             List<int[]> validMoves = new ArrayList<>();
             for(int row = 0; row < BOARD_SIZE; row++) {
                 for(int col = 0; col < BOARD_SIZE; col++) {
-                    if(othelloModel.isValidMove(new Coord(row, col), currentPlayer)) {
+                    if(othelloModel.canMove(row, col, currentPlayer)) {
                         validMoves.add(new int[]{row, col});
                     }
                 }
@@ -1226,8 +1226,8 @@ public class OthelloViewController extends FlowPane {
          */
         private void attemptMove() {
             
-            if(othelloModel.isValidMove(new Coord(cursorPosition[0], cursorPosition[1]), currentPlayer)) {
-                int chipsCaptured = othelloModel.tryMove(new Coord(cursorPosition[0], cursorPosition[1]), currentPlayer);
+            if(othelloModel.canMove(cursorPosition[0], cursorPosition[1], currentPlayer)) {
+                int chipsCaptured = othelloModel.tryMove(cursorPosition[0], cursorPosition[1], currentPlayer);
                 updateBoardState(othelloModel.getBoard());
                 updateScore(othelloModel.chipCount(OthelloModel.BLACK), OthelloModel.BLACK);
                 updateScore(othelloModel.chipCount(OthelloModel.WHITE), OthelloModel.WHITE);
